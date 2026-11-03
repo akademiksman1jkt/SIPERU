@@ -30,7 +30,7 @@ body {
 }
 
 /* =========================================================
-   HEADER UTAMA SEKOLAH
+   1. HEADER UTAMA SEKOLAH
    ========================================================= */
 .school-header {
     background-color: var(--brand-dark);
@@ -119,7 +119,7 @@ body {
 }
 
 /* =========================================================
-   SIDEBAR NAVIGASI
+   2. SIDEBAR NAVIGASI
    ========================================================= */
 .sidebar-nav {
     width: 260px;
@@ -194,7 +194,7 @@ body {
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
-/* Form & Controls */
+/* Form Controls */
 .form-control {
     width: 100%;
     padding: 12px 14px;
@@ -226,9 +226,111 @@ body {
 }
 
 /* =========================================================
-   DESAIN KALENDER MODERN & BERWARNA (CLEAR BORDERS)
+   3. KATALOG RUANGAN MODERN (GRID CARD UI)
    ========================================================= */
+.room-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
 
+.room-card {
+    background: #ffffff;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.room-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    border-color: #94a3b8;
+}
+
+.room-card-header {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    color: #ffffff;
+    padding: 14px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.room-card-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: #ffffff;
+}
+
+.room-badge {
+    background: rgba(255, 255, 255, 0.15);
+    color: #38bdf8;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 20px;
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    text-transform: uppercase;
+}
+
+.room-body {
+    padding: 16px 18px;
+    font-size: 13.5px;
+    color: #475569;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.room-info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    line-height: 1.4;
+}
+
+.room-info-item span.icon {
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.room-card-footer {
+    padding: 14px 18px;
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+}
+
+.btn-book-room {
+    width: 100%;
+    background: #2563eb;
+    color: #ffffff;
+    border: none;
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 700;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.btn-book-room:hover {
+    background: #1d4ed8;
+}
+
+/* =========================================================
+   4. DESAIN KALENDER MODERN & CLEAR BORDERS
+   ========================================================= */
 .card-header-bar {
     padding: 18px 24px;
     background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
@@ -282,7 +384,7 @@ body {
 .calendar-responsive-wrapper {
     width: 100%;
     overflow-x: auto;
-    background: #cbd5e1; /* Warna batas antar sel kalender */
+    background: #cbd5e1;
     padding: 2px;
 }
 
@@ -290,10 +392,9 @@ body {
     width: 100%;
     min-width: 700px;
     border-collapse: collapse;
-    background: #cbd5e1; /* Warna grid border */
+    background: #cbd5e1;
 }
 
-/* Header Hari */
 .table-calendar th {
     background: #1e293b;
     color: #94a3b8;
@@ -309,10 +410,9 @@ body {
 .table-calendar th.sun { color: #f87171; }
 .table-calendar th.sat { color: #fbbf24; }
 
-/* Sel Tanggal Bergaris Jelas */
 .table-calendar td {
     background-color: #ffffff;
-    border: 1.5px solid #cbd5e1; /* GARIS BATAS JELAS */
+    border: 1.5px solid #cbd5e1;
     height: 110px;
     vertical-align: top;
     padding: 8px;
@@ -321,7 +421,7 @@ body {
 }
 
 .table-calendar td:hover {
-    background-color: #eff6ff; /* Sorotan warna biru muda saat hover */
+    background-color: #eff6ff;
 }
 
 .table-calendar td.empty-cell {
@@ -347,7 +447,6 @@ body {
     border-radius: 50%;
 }
 
-/* Indikator Hari Ini Biru Menyala */
 .today-badge .date-num {
     background: #2563eb;
     color: #ffffff !important;
@@ -355,11 +454,7 @@ body {
     box-shadow: 0 4px 12px rgba(37, 99, 235, 0.45);
 }
 
-/* Tag Kegiatan Berwarna Segar */
 .event-tag-modern {
-    background: #dcfce7;
-    color: #14532d;
-    border: 1px solid #86efac;
     padding: 4px 8px;
     font-size: 11px;
     font-weight: 700;
@@ -378,18 +473,47 @@ body {
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background-color: #16a34a;
     flex-shrink: 0;
 }
 
 /* =========================================================
-   RESPONSIVE FIX FOR MOBILE & TABLET
+   5. WARNA-WARNI UNIK 7 RUANGAN SMKN 26 JAKARTA
    ========================================================= */
+/* ID 1: Aula -> HIJAU EMERALD */
+.room-color-1 { background-color: #dcfce7; color: #14532d; border: 1px solid #86efac; }
+.room-color-1 .event-dot { background-color: #16a34a; }
+
+/* ID 2: Lab Sija -> BIRU LAUT */
+.room-color-2 { background-color: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }
+.room-color-2 .event-dot { background-color: #2563eb; }
+
+/* ID 3: Lab KGS -> KUNING EMAS */
+.room-color-3 { background-color: #fef9c3; color: #854d0e; border: 1px solid #fde047; }
+.room-color-3 .event-dot { background-color: #ca8a04; }
+
+/* ID 4: Lab TEK -> PINK BRIGHT */
+.room-color-4 { background-color: #fce7f3; color: #831843; border: 1px solid #fbcfe8; }
+.room-color-4 .event-dot { background-color: #db2777; }
+
+/* ID 5: Lab TFLM -> UNGU DEEP */
+.room-color-5 { background-color: #f3e8ff; color: #581c87; border: 1px solid #d8b4fe; }
+.room-color-5 .event-dot { background-color: #9333ea; }
+
+/* ID 6: Ruang Sidang -> ORANYE BATA */
+.room-color-6 { background-color: #ffedd5; color: #9a3412; border: 1px solid #fed7aa; }
+.room-color-6 .event-dot { background-color: #ea580c; }
+
+/* ID 7: Ruang Multimedia -> TOSKA PEKAT */
+.room-color-7 { background-color: #ccfbf1; color: #134e4a; border: 1px solid #5eead4; }
+.room-color-7 .event-dot { background-color: #0d9488; }
+
+.event-tag-default { background-color: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; }
+.event-tag-default .event-dot { background-color: #64748b; }
+
 /* =========================================================
-   RESPONSIVE FIT-TO-SCREEN UNTUK MOBILE (TANPA SCROLL KANAN)
+   6. RESPONSIVE FIT-TO-SCREEN UNTUK MOBILE
    ========================================================= */
 @media (max-width: 768px) {
-    /* 1. Header Atas Sekolah & Navigasi */
     .school-header {
         padding: 12px 14px;
         flex-direction: column;
@@ -483,7 +607,7 @@ body {
     }
 
     .content-area {
-        padding: 8px; /* Padding lebih ramping untuk HP */
+        padding: 8px;
     }
 
     .form-grid-flex {
@@ -491,7 +615,6 @@ body {
         gap: 14px;
     }
 
-    /* 2. Kalender Fit-To-Screen (Paksa Pas Layar HP) */
     .official-card {
         border-radius: 8px;
         margin-bottom: 16px;
@@ -510,24 +633,24 @@ body {
 
     .calendar-responsive-wrapper {
         width: 100%;
-        overflow-x: hidden !important; /* Matikan geser kanan-kiri */
+        overflow-x: hidden !important;
         padding: 0;
     }
 
     .table-calendar {
         width: 100% !important;
-        min-width: 0 !important; /* Hapus min-width 700px agar tidak melebar */
-        table-layout: fixed; /* Paksa membagi 7 kolom secara proporsional presisi */
+        min-width: 0 !important;
+        table-layout: fixed;
     }
 
     .table-calendar th {
         padding: 8px 2px;
-        font-size: 10px; /* Ukuran teks hari lebih kecil agar muat */
+        font-size: 10px;
         letter-spacing: 0;
     }
 
     .table-calendar td {
-        height: 75px; /* Tinggi sel lebih ramping di HP */
+        height: 75px;
         padding: 3px;
         font-size: 11px;
     }
@@ -542,7 +665,6 @@ body {
         box-shadow: 0 2px 6px rgba(37, 99, 235, 0.4);
     }
 
-    /* 3. Tag Acara Ringkas di HP */
     .event-tag-modern {
         padding: 2px 4px;
         font-size: 9px;
@@ -556,70 +678,3 @@ body {
         height: 5px;
     }
 }
-/* =========================================================
-   WARNA-WARNI UNIK & KONTRASTIF 7 RUANGAN SMKN 26 JAKARTA
-   ========================================================= */
-
-/* ID 1: Aula -> HIJAU EMERALD */
-.room-color-1 { 
-    background-color: #dcfce7; 
-    color: #14532d; 
-    border: 1px solid #86efac; 
-}
-.room-color-1 .event-dot { background-color: #16a34a; }
-
-/* ID 2: Lab Sija -> BIRU BIRU LAUT / ELECTRIC BLUE */
-.room-color-2 { 
-    background-color: #dbeafe; 
-    color: #1e40af; 
-    border: 1px solid #93c5fd; 
-}
-.room-color-2 .event-dot { background-color: #2563eb; }
-
-/* ID 3: Lab KGS -> KUNING EMAS / AMBER */
-.room-color-3 { 
-    background-color: #fef9c3; 
-    color: #854d0e; 
-    border: 1px solid #fde047; 
-}
-.room-color-3 .event-dot { background-color: #ca8a04; }
-
-/* ID 4: Lab TEK -> PINK BRIGHT / MAGENTA */
-.room-color-4 { 
-    background-color: #fce7f3; 
-    color: #831843; 
-    border: 1px solid #fbcfe8; 
-}
-.room-color-4 .event-dot { background-color: #db2777; }
-
-/* ID 5: Lab TFLM -> UNGU DEEP / PURPLE */
-.room-color-5 { 
-    background-color: #f3e8ff; 
-    color: #581c87; 
-    border: 1px solid #d8b4fe; 
-}
-.room-color-5 .event-dot { background-color: #9333ea; }
-
-/* ID 6: Ruang Sidang -> ORANYE BATA / ORANGE */
-.room-color-6 { 
-    background-color: #ffedd5; 
-    color: #9a3412; 
-    border: 1px solid #fed7aa; 
-}
-.room-color-6 .event-dot { background-color: #ea580c; }
-
-/* ID 7: Ruang Multimedia -> TOSKA PEKAT / TEAL CYAN */
-.room-color-7 { 
-    background-color: #ccfbf1; 
-    color: #134e4a; 
-    border: 1px solid #5eead4; 
-}
-.room-color-7 .event-dot { background-color: #0d9488; }
-
-/* Default / Fallback jika ada ID lain */
-.event-tag-default { 
-    background-color: #f1f5f9; 
-    color: #334155; 
-    border: 1px solid #cbd5e1; 
-}
-.event-tag-default .event-dot { background-color: #64748b; }

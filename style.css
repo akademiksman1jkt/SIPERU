@@ -557,37 +557,69 @@ body {
     }
 }
 /* =========================================================
-   WARNA-WARNI UNIK UNTUK 7 RUANGAN SMKN 26 JAKARTA
+   WARNA-WARNI UNIK & KONTRASTIF 7 RUANGAN SMKN 26 JAKARTA
    ========================================================= */
 
-/* ID 1: Aula (Hijau Emerald) */
-.room-color-1 { background-color: #dcfce7; color: #14532d; border: 1px solid #86efac; }
+/* ID 1: Aula -> HIJAU EMERALD */
+.room-color-1 { 
+    background-color: #dcfce7; 
+    color: #14532d; 
+    border: 1px solid #86efac; 
+}
 .room-color-1 .event-dot { background-color: #16a34a; }
 
-/* ID 2: Lab Sija (Biru Laut) */
-.room-color-2 { background-color: #e0f2fe; color: #0369a1; border: 1px solid #7dd3fc; }
-.room-color-2 .event-dot { background-color: #0284c7; }
+/* ID 2: Lab Sija -> BIRU BIRU LAUT / ELECTRIC BLUE */
+.room-color-2 { 
+    background-color: #dbeafe; 
+    color: #1e40af; 
+    border: 1px solid #93c5fd; 
+}
+.room-color-2 .event-dot { background-color: #2563eb; }
 
-/* ID 3: Lab KGS (Kuning Amber) */
-.room-color-3 { background-color: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
-.room-color-3 .event-dot { background-color: #d97706; }
+/* ID 3: Lab KGS -> KUNING EMAS / AMBER */
+.room-color-3 { 
+    background-color: #fef9c3; 
+    color: #854d0e; 
+    border: 1px solid #fde047; 
+}
+.room-color-3 .event-dot { background-color: #ca8a04; }
 
-/* ID 4: Lab TEK (Merah Muda / Rose) */
-.room-color-4 { background-color: #ffe4e6; color: #9f1239; border: 1px solid #fecdd3; }
-.room-color-4 .event-dot { background-color: #e11d48; }
+/* ID 4: Lab TEK -> PINK BRIGHT / MAGENTA */
+.room-color-4 { 
+    background-color: #fce7f3; 
+    color: #831843; 
+    border: 1px solid #fbcfe8; 
+}
+.room-color-4 .event-dot { background-color: #db2777; }
 
-/* ID 5: Lab TFLM (Ungu) */
-.room-color-5 { background-color: #f3e8ff; color: #6b21a8; border: 1px solid #e9d5ff; }
+/* ID 5: Lab TFLM -> UNGU DEEP / PURPLE */
+.room-color-5 { 
+    background-color: #f3e8ff; 
+    color: #581c87; 
+    border: 1px solid #d8b4fe; 
+}
 .room-color-5 .event-dot { background-color: #9333ea; }
 
-/* ID 6: Ruang Sidang (Oranye / Coral) */
-.room-color-6 { background-color: #ffedd5; color: #9a3412; border: 1px solid #fed7aa; }
+/* ID 6: Ruang Sidang -> ORANYE BATA / ORANGE */
+.room-color-6 { 
+    background-color: #ffedd5; 
+    color: #9a3412; 
+    border: 1px solid #fed7aa; 
+}
 .room-color-6 .event-dot { background-color: #ea580c; }
 
-/* ID 7: Ruang Multimedia (Cyan / Toska) */
-.room-color-7 { background-color: #ccfbf1; color: #115e59; border: 1px solid #99f6e4; }
+/* ID 7: Ruang Multimedia -> TOSKA PEKAT / TEAL CYAN */
+.room-color-7 { 
+    background-color: #ccfbf1; 
+    color: #134e4a; 
+    border: 1px solid #5eead4; 
+}
 .room-color-7 .event-dot { background-color: #0d9488; }
 
-/* Default / Fallback */
-.event-tag-default { background-color: #e2e8f0; color: #334155; border: 1px solid #cbd5e1; }
+/* Default / Fallback jika ada ID lain */
+.event-tag-default { 
+    background-color: #f1f5f9; 
+    color: #334155; 
+    border: 1px solid #cbd5e1; 
+}
 .event-tag-default .event-dot { background-color: #64748b; }

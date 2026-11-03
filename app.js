@@ -210,6 +210,9 @@ function closeEventModal() {
     document.getElementById('eventDetailModal').style.display = 'none';
 }
 
+// SEBELUMNYA: alert("Permohonan peminjaman berhasil dikirim! ...");
+// DIGANTI MENJADI:
+
 async function handleFormSubmit(e) {
     e.preventDefault();
     const payload = {
@@ -227,12 +230,15 @@ async function handleFormSubmit(e) {
     try {
         const { error } = await supabaseClient.from('reservations').insert([payload]);
         if (error) throw error;
-        alert("Permohonan peminjaman berhasil dikirim! Menunggu persetujuan Admin Sarpras.");
+        
+        // Pengganti alert() bawaan
+        showCustomAlert("Permohonan peminjaman berhasil dikirim! Menunggu persetujuan Admin Sarpras.", "Pengajuan Berhasil", "success");
+        
         document.getElementById('bookingForm').reset();
         await fetchReservations();
         switchView('agenda');
     } catch (err) {
-        alert("Gagal mengirim permohonan: " + err.message);
+        showCustomAlert("Gagal mengirim permohonan: " + err.message, "Kesalahan Sistem", "error");
     }
 }
 
@@ -245,6 +251,9 @@ function toggleAdminModal() {
     }
 }
 
+// SEBELUMNYA: alert("Username atau Password Admin salah!");
+// DIGANTI MENJADI:
+
 function handleAdminLogin(e) {
     e.preventDefault();
     const u = document.getElementById('adminUser').value;
@@ -255,8 +264,9 @@ function handleAdminLogin(e) {
         document.getElementById('adminAuthModal').style.display = 'none';
         switchView('admin');
         renderAdminTable();
+        showCustomAlert("Selamat datang di Portal Admin Sarpras SMKN 26 Jakarta.", "Autentikasi Berhasil", "success");
     } else {
-        alert("Username atau Password Admin salah!");
+        showCustomAlert("Username atau Password Admin tidak valid!", "Gagal Login", "error");
     }
 }
 
@@ -286,12 +296,47 @@ function renderAdminTable() {
     `).join('');
 }
 
+
 async function updateStatus(id, newStatus) {
     try {
         const { error } = await supabaseClient.from('reservations').update({ status: newStatus }).eq('id', id);
         if (error) throw error;
         await fetchReservations();
+        showCustomAlert(`Status permohonan berhasil diperbarui menjadi ${newStatus}.`, "Status Diperbarui", "success");
     } catch (err) {
-        alert("Gagal memperbarui status: " + err.message);
+        showCustomAlert("Gagal memperbarui status: " + err.message, "Kesalahan Sistem", "error");
     }
+}
+// =========================================================
+// NOTIFIKASI MODAL MODERN (Pengganti alert() bawaan browser)
+// =========================================================
+function showCustomAlert(message, title = "Informasi Sistem", type = "info") {
+    const modal = document.getElementById('customAlertModal');
+    const titleEl = document.getElementById('alertTitle');
+    const msgEl = document.getElementById('alertMessage');
+    const iconEl = document.getElementById('alertIcon');
+    const headerBg = document.getElementById('alertHeaderBg');
+
+    if (!modal) return;
+
+    titleEl.innerText = title;
+    msgEl.innerText = message;
+
+    if (type === "success") {
+        iconEl.innerText = "✅";
+        headerBg.style.background = "#14532d";
+    } else if (type === "error") {
+        iconEl.innerText = "⚠️";
+        headerBg.style.background = "#7f1d1d";
+    } else {
+        iconEl.innerText = "ℹ️";
+        headerBg.style.background = "#0f172a";
+    }
+
+    modal.style.display = 'flex';
+}
+
+function closeCustomAlert() {
+    const modal = document.getElementById('customAlertModal');
+    if (modal) modal.style.display = 'none';
 }

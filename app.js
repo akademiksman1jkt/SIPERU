@@ -210,27 +210,57 @@ function closeEventModal() {
 
 async function handleFormSubmit(e) {
     e.preventDefault();
+    
+    const roomId = parseInt(document.getElementById('formRoomId').value);
+    const tgl = document.getElementById('formTanggal').value;
+    const jamMulai = document.getElementById('formJamMulai').value;
+    const jamSelesai = document.getElementById('formJamSelesai').value;
+
     const payload = {
-        room_id: parseInt(document.getElementById('formRoomId').value),
+        room_id: roomId,
         nama_peminjam: document.getElementById('formNama').value,
         identitas: document.getElementById('formIdentitas').value,
         unit_organisasi: document.getElementById('formOrganisasi').value,
-        tanggal_pinjam: document.getElementById('formTanggal').value,
-        jam_mulai: document.getElementById('formJamMulai').value,
-        jam_selesai: document.getElementById('formJamSelesai').value,
+        tanggal_pinjam: tgl,
+        jam_mulai: jamMulai,
+        jam_selesai: jamSelesai,
         tujuan_kegiatan: document.getElementById('formTujuan').value,
         status: 'PENDING'
     };
 
+    // 1. Cek Potensi Bentrok dengan Agenda yang Sudah Disetujui (APPROVED)
+    const isConflict = localReservations.some(r => {
+        if (r.room_id === roomId && r.tanggal_pinjam === tgl && r.status === 'APPROVED') {
+            // Cek irisan waktu (Overlap Time)
+            return (jamMulai < r.jam_selesai && jamSelesai > r.jam_mulai);
+        }
+        return false;
+    });
+
     try {
+        // 2. Permohonan Tetap Dikirim ke Database Supabase
         const { error } = await supabaseClient.from('reservations').insert([payload]);
         if (error) throw error;
-        
-        showCustomAlert("Permohonan peminjaman berhasil dikirim! Menunggu persetujuan Admin Sarpras.", "Pengajuan Berhasil", "success");
         
         document.getElementById('bookingForm').reset();
         await fetchReservations();
         switchView('agenda');
+
+        // 3. Tampilkan Notifikasi Sesuai Kondisi Bentrok
+        if (isConflict) {
+            showCustomAlert(
+                "Permohonan Anda berhasil dikirim (Status: PENDING). Catatan: Ruangan dan jam ini terdeteksi memiliki agenda lain yang sudah disetujui. Keputusan persetujuan penuh berada di tangan Admin Sarpras.", 
+                "Peringatan Potensi Bentrok", 
+                "info"
+            );
+        } else {
+            showCustomAlert(
+                "Permohonan peminjaman berhasil dikirim! Menunggu persetujuan Admin Sarpras.", 
+                "Pengajuan Berhasil", 
+                "success"
+            );
+        }
+
     } catch (err) {
         showCustomAlert("Gagal mengirim permohonan: " + err.message, "Kesalahan Sistem", "error");
     }
@@ -280,25 +310,79 @@ function logoutAdmin() {
     switchView('agenda');
 }
 
+// =========================================================
+// RENDER TABEL ADMIN (Dengan Deteksi Bentrok Visual)
+// =========================================================
 function renderAdminTable() {
     const tbody = document.getElementById('adminTableBody');
-    tbody.innerHTML = localReservations.map(item => `
-        <tr style="border-bottom: 1px solid #cbd5e1;">
-            <td style="padding: 12px;">${item.tanggal_pinjam}</td>
-            <td style="padding: 12px;"><strong>${item.nama_peminjam}</strong><br><small style="color:#64748b;">${item.unit_organisasi} (${item.identitas})</small></td>
-            <td style="padding: 12px;">${item.rooms?.nama_ruangan || '-'}</td>
-            <td style="padding: 12px;"><strong>${item.jam_mulai.substring(0,5)} - ${item.jam_selesai.substring(0,5)} WIB</strong><br><small style="color:#475569;">${item.tujuan_kegiatan}</small></td>
-            <td style="padding: 12px;"><strong>${item.status}</strong></td>
-            <td style="padding: 12px; text-align: center;">
-                ${item.status === 'PENDING' ? `
-                    <button onclick="updateStatus(${item.id}, 'APPROVED')" class="btn-official" style="background:#16a34a; border-color:#16a34a; padding:4px 8px; font-size:12px;">Setujui</button>
-                    <button onclick="updateStatus(${item.id}, 'REJECTED')" class="btn-official" style="background:#dc2626; border-color:#dc2626; padding:4px 8px; font-size:12px;">Tolak</button>
-                ` : `
-                    <button onclick="updateStatus(${item.id}, 'PENDING')" class="btn-official" style="background:#64748b; border-color:#64748b; padding:4px 8px; font-size:12px;">Reset</button>
-                `}
-            </td>
-        </tr>
-    `).join('');
+    if (!tbody) return;
+
+    tbody.innerHTML = localReservations.map(item => {
+        // Cek apakah permohonan ini bentrok dengan permohonan LAIN di database
+        // Bentrok = Ruangan sama, Tanggal sama, Jam beririsan, dan ID tidak sama
+        const isConflict = localReservations.some(other => {
+            if (other.id !== item.id && 
+                other.room_id === item.room_id && 
+                other.tanggal_pinjam === item.tanggal_pinjam &&
+                other.status !== 'REJECTED') { // Menghiraukan permohonan yang sudah ditolak
+                
+                // Cek irisan rentang waktu (Overlap Time Check)
+                return (item.jam_mulai < other.jam_selesai && item.jam_selesai > other.jam_mulai);
+            }
+            return false;
+        });
+
+        // Gaya tampilan jika terdeteksi bentrok
+        const rowBgStyle = isConflict 
+            ? 'background-color: #fff1f2; border-left: 4px solid #f43f5e;' 
+            : 'border-bottom: 1px solid #cbd5e1;';
+
+        const conflictBadge = isConflict 
+            ? `<div style="font-size: 10px; background: #ffe4e6; color: #be123c; border: 1px solid #fecdd3; padding: 2px 6px; border-radius: 4px; font-weight: 800; margin-top: 4px; display: inline-block;">⚠️ BENTROK JADWAL</div>` 
+            : '';
+
+        return `
+            <tr style="${rowBgStyle}">
+                <td style="padding: 12px;">
+                    <strong>${item.tanggal_pinjam}</strong>
+                    ${conflictBadge}
+                </td>
+                <td style="padding: 12px;">
+                    <strong>${item.nama_peminjam}</strong><br>
+                    <small style="color:#64748b;">${item.unit_organisasi} (${item.identitas})</small>
+                </td>
+                <td style="padding: 12px;">
+                    <strong style="color: #0f172a;">${item.rooms?.nama_ruangan || '-'}</strong>
+                </td>
+                <td style="padding: 12px;">
+                    <strong style="color: #b45309;">${item.jam_mulai.substring(0,5)} - ${item.jam_selesai.substring(0,5)} WIB</strong><br>
+                    <small style="color:#475569;">${item.tujuan_kegiatan}</small>
+                </td>
+                <td style="padding: 12px;">
+                    <span style="font-weight: 800; font-size: 12px; padding: 3px 8px; border-radius: 4px; ${
+                        item.status === 'APPROVED' ? 'background: #dcfce7; color: #15803d; border: 1px solid #86efac;' :
+                        item.status === 'REJECTED' ? 'background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5;' :
+                        'background: #fef3c7; color: #b45309; border: 1px solid #fde68a;'
+                    }">
+                        ${item.status}
+                    </span>
+                </td>
+                <td style="padding: 12px; text-align: center;">
+                    <div style="display: flex; gap: 4px; justify-content: center;">
+                        ${item.status === 'PENDING' ? `
+                            <button onclick="updateStatus(${item.id}, 'APPROVED')" class="btn-official" style="background:#16a34a; border-color:#16a34a; padding:4px 8px; font-size:12px;">Setujui</button>
+                            <button onclick="updateStatus(${item.id}, 'REJECTED')" class="btn-official" style="background:#dc2626; border-color:#dc2626; padding:4px 8px; font-size:12px;">Tolak</button>
+                        ` : `
+                            <button onclick="updateStatus(${item.id}, 'PENDING')" class="btn-official" style="background:#64748b; border-color:#64748b; padding:4px 8px; font-size:12px;">Reset</button>
+                        `}
+                        <button onclick="deleteReservation(${item.id})" class="btn-official" style="background:#b91c1c; border-color:#b91c1c; padding:4px 8px; font-size:12px;" title="Hapus Ajuan">
+                            🗑️
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `;
+    }).join('');
 }
 
 async function updateStatus(id, newStatus) {
@@ -342,4 +426,23 @@ function showCustomAlert(message, title = "Informasi Sistem", type = "info") {
 function closeCustomAlert() {
     const modal = document.getElementById('customAlertModal');
     if (modal) modal.style.display = 'none';
+}
+// =========================================================
+// HAPUS AJUAN (Fitur Admin)
+// =========================================================
+async function deleteReservation(id) {
+    if (!confirm("Apakah Anda yakin ingin menghapus permohonan ini secara permanen?")) return;
+
+    try {
+        const { error } = await supabaseClient
+            .from('reservations')
+            .delete()
+            .eq('id', id);
+
+        if (error) throw error;
+        await fetchReservations();
+        showCustomAlert("Data permohonan berhasil dihapus.", "Hapus Data", "info");
+    } catch (err) {
+        showCustomAlert("Gagal menghapus data: " + err.message, "Kesalahan Sistem", "error");
+    }
 }

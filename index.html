@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SIPERU SMKN 26 Jakarta - Sistem Informasi Sarpras</title>
     
-    <!-- Favicon (.ico) -->
+    <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="favicon.ico">
 
     <!-- Supabase JS Client -->
@@ -184,17 +184,17 @@
     </div>
 
     <!-- MODAL LOGIN ADMIN -->
-    <div id="adminAuthModal" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.75); justify-content: center; align-items: center; z-index: 99;">
+    <div id="adminAuthModal" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(4px); justify-content: center; align-items: center; z-index: 99;">
         <div style="background: #ffffff; padding: 32px; border-radius: 6px; width: 360px; border: 2px solid var(--brand-border-light);">
             <h4 style="font-size: 18px; font-weight: 800; margin-top: 0; margin-bottom: 16px; color: #0f172a;">Login Petugas Sarpras</h4>
             <form onsubmit="handleAdminLogin(event)">
                 <div style="margin-bottom: 16px;">
-                    <label style="font-size: 12px; font-weight: 800; display: block; margin-bottom: 6px; color: #334155;">USERNAME</label>
-                    <input type="text" id="adminUser" required class="form-control">
+                    <label style="font-size: 12px; font-weight: 800; display: block; margin-bottom: 6px; color: #334155;">USERNAME ADMIN</label>
+                    <input type="text" id="adminUser" placeholder="Masukkan Username Admin" required class="form-control">
                 </div>
                 <div style="margin-bottom: 20px;">
                     <label style="font-size: 12px; font-weight: 800; display: block; margin-bottom: 6px; color: #334155;">PASSWORD</label>
-                    <input type="password" id="adminPass" required class="form-control">
+                    <input type="password" id="adminPass" placeholder="Masukkan Password" required class="form-control">
                 </div>
                 <div style="display: flex; gap: 12px;">
                     <button type="button" onclick="toggleAdminModal()" style="flex:1; padding: 10px; border: 2px solid #cbd5e1; background:#fff; font-weight:bold; cursor:pointer;">Batal</button>
@@ -203,7 +203,8 @@
             </form>
         </div>
     </div>
-<!-- MODAL DETAIL AGENDA TANGGAL -->
+
+    <!-- MODAL DETAIL AGENDA TANGGAL -->
     <div id="eventDetailModal" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); justify-content: center; align-items: center; z-index: 999; padding: 20px;">
         <div style="background: #ffffff; border-radius: 8px; width: 100%; max-width: 500px; border: 2px solid var(--brand-border-light); overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
             <div style="background: var(--brand-dark); color: #ffffff; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center;">
@@ -211,7 +212,7 @@
                 <button onclick="closeEventModal()" style="background: transparent; border: none; color: #ffffff; font-size: 18px; font-weight: bold; cursor: pointer;">✕</button>
             </div>
             <div id="modalEventList" style="padding: 20px; max-height: 400px; overflow-y: auto;">
-                <!-- Daftar agenda diisi lewat JavaScript -->
+                <!-- Filled via JS -->
             </div>
             <div style="padding: 14px 20px; background: #f8fafc; border-top: 1px solid var(--brand-border-light); display: flex; justify-content: space-between; gap: 10px;">
                 <button onclick="closeEventModal()" class="btn-admin-header" style="padding: 8px 16px;">Tutup</button>
@@ -219,21 +220,23 @@
             </div>
         </div>
     </div>
-    <!-- MODAL NOTIFIKASI MODERN (Pengganti Alert Browser) -->
+
+    <!-- MODAL NOTIFIKASI MODERN -->
     <div id="customAlertModal" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(4px); justify-content: center; align-items: center; z-index: 1000; padding: 20px;">
-        <div style="background: #ffffff; border-radius: 8px; width: 100%; max-width: 420px; border: 2px solid var(--brand-border-light); overflow: hidden; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2); text-align: center;">
-            <div id="alertHeaderBg" style="background: var(--brand-dark); color: #ffffff; padding: 18px 20px;">
+        <div style="background: #ffffff; border-radius: 8px; width: 100%; max-width: 400px; border: 2px solid #cbd5e1; overflow: hidden; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2); text-align: center;">
+            <div id="alertHeaderBg" style="background: #0f172a; color: #ffffff; padding: 18px 20px;">
                 <div id="alertIcon" style="font-size: 28px; margin-bottom: 6px;">ℹ️</div>
                 <h4 id="alertTitle" style="font-size: 16px; font-weight: 800; margin: 0;">Informasi Sistem</h4>
             </div>
             <div style="padding: 24px 20px;">
                 <p id="alertMessage" style="font-size: 14px; color: #334155; margin: 0; line-height: 1.6;"></p>
             </div>
-            <div style="padding: 14px 20px; background: #f8fafc; border-top: 1px solid var(--brand-border-light); display: flex; justify-content: center;">
+            <div style="padding: 14px 20px; background: #f8fafc; border-top: 1px solid #cbd5e1; display: flex; justify-content: center;">
                 <button onclick="closeCustomAlert()" class="btn-official" style="padding: 10px 24px; min-width: 120px;">OK</button>
             </div>
         </div>
     </div>
+
     <script src="app.js"></script>
 </body>
 </html>

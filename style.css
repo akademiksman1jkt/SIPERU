@@ -385,7 +385,11 @@ body {
 /* =========================================================
    RESPONSIVE FIX FOR MOBILE & TABLET
    ========================================================= */
+/* =========================================================
+   RESPONSIVE FIT-TO-SCREEN UNTUK MOBILE (TANPA SCROLL KANAN)
+   ========================================================= */
 @media (max-width: 768px) {
+    /* 1. Header Atas Sekolah & Navigasi */
     .school-header {
         padding: 12px 14px;
         flex-direction: column;
@@ -462,8 +466,8 @@ body {
         flex: 1;
         text-align: center;
         justify-content: center;
-        padding: 12px 14px;
-        font-size: 12.5px;
+        padding: 12px 8px;
+        font-size: 12px;
         font-weight: 700;
         color: #475569;
         border-left: none;
@@ -479,7 +483,7 @@ body {
     }
 
     .content-area {
-        padding: 12px;
+        padding: 8px; /* Padding lebih ramping untuk HP */
     }
 
     .form-grid-flex {
@@ -487,14 +491,68 @@ body {
         gap: 14px;
     }
 
+    /* 2. Kalender Fit-To-Screen (Paksa Pas Layar HP) */
+    .official-card {
+        border-radius: 8px;
+        margin-bottom: 16px;
+    }
+
     .card-header-bar {
-        padding: 14px 16px;
+        padding: 12px 14px;
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
     }
 
     .calendar-month-title {
-        font-size: 17px;
+        font-size: 16px;
+    }
+
+    .calendar-responsive-wrapper {
+        width: 100%;
+        overflow-x: hidden !important; /* Matikan geser kanan-kiri */
+        padding: 0;
+    }
+
+    .table-calendar {
+        width: 100% !important;
+        min-width: 0 !important; /* Hapus min-width 700px agar tidak melebar */
+        table-layout: fixed; /* Paksa membagi 7 kolom secara proporsional presisi */
+    }
+
+    .table-calendar th {
+        padding: 8px 2px;
+        font-size: 10px; /* Ukuran teks hari lebih kecil agar muat */
+        letter-spacing: 0;
+    }
+
+    .table-calendar td {
+        height: 75px; /* Tinggi sel lebih ramping di HP */
+        padding: 3px;
+        font-size: 11px;
+    }
+
+    .date-num {
+        font-size: 11px;
+        width: 20px;
+        height: 20px;
+    }
+
+    .today-badge .date-num {
+        box-shadow: 0 2px 6px rgba(37, 99, 235, 0.4);
+    }
+
+    /* 3. Tag Acara Ringkas di HP */
+    .event-tag-modern {
+        padding: 2px 4px;
+        font-size: 9px;
+        border-radius: 4px;
+        margin-top: 2px;
+        gap: 3px;
+    }
+
+    .event-dot {
+        width: 5px;
+        height: 5px;
     }
 }

@@ -65,24 +65,26 @@
             <section id="view-agenda">
                 <div class="official-card">
                     <div class="card-header-bar">
-                        <h3 style="font-size: 16px; font-weight: 800; color: #0f172a; margin: 0;">JADWAL PENGGUNAAN RUANGAN</h3>
                         <div>
-                            <button onclick="changeMonth(-1)" class="btn-official" style="padding: 6px 14px;">&laquo; Prev</button>
-                            <span id="calendarMonthYear" style="font-weight: 800; padding: 0 16px; font-size: 15px;">Maret 2026</span>
-                            <button onclick="changeMonth(1)" class="btn-official" style="padding: 6px 14px;">Next &raquo;</button>
+                            <span style="font-size: 11px; font-weight: 800; color: #64748b; letter-spacing: 1px; text-transform: uppercase; display: block; margin-bottom: 2px;">JADWAL RUANGAN</span>
+                            <div id="calendarMonthYear" class="calendar-month-title">Maret 2026</div>
+                        </div>
+                        <div class="calendar-nav-group">
+                            <button onclick="changeMonth(-1)" class="btn-cal-nav" title="Bulan Sebelumnya">&lsaquo;</button>
+                            <button onclick="changeMonth(1)" class="btn-cal-nav" title="Bulan Berikutnya">&rsaquo;</button>
                         </div>
                     </div>
                     <div class="calendar-responsive-wrapper">
                         <table class="table-calendar">
                             <thead>
                                 <tr>
-                                    <th style="color: #f87171;">MINGGU</th>
-                                    <th>SENIN</th>
-                                    <th>SELASA</th>
-                                    <th>RABU</th>
-                                    <th>KAMIS</th>
-                                    <th>JUMAT</th>
-                                    <th style="color: #fbbf24;">SABTU</th>
+                                    <th class="sun">MIN</th>
+                                    <th>SEN</th>
+                                    <th>SEL</th>
+                                    <th>RAB</th>
+                                    <th>KAM</th>
+                                    <th>JUM</th>
+                                    <th class="sat">SAB</th>
                                 </tr>
                             </thead>
                             <tbody id="calendarGridBody">

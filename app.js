@@ -254,19 +254,38 @@ function toggleAdminModal() {
 // SEBELUMNYA: alert("Username atau Password Admin salah!");
 // DIGANTI MENJADI:
 
-function handleAdminLogin(e) {
+// =========================================================
+// LOG IN ADMIN FLEKSIBEL (Cek ke Tabel Database Supabase)
+// =========================================================
+async function handleAdminLogin(e) {
     e.preventDefault();
-    const u = document.getElementById('adminUser').value;
-    const p = document.getElementById('adminPass').value;
+    const inputUser = document.getElementById('adminUser').value.trim();
+    const inputPass = document.getElementById('adminPass').value.trim();
 
-    if (u === 'admin' && p === 'admin123') {
+    try {
+        // Cari data admin di tabel admin_users berdasarkan username & password
+        const { data, error } = await supabaseClient
+            .from('admin_users')
+            .select('*')
+            .eq('username', inputUser)
+            .eq('password', inputPass)
+            .single();
+
+        if (error || !data) {
+            showCustomAlert("Username atau Password Admin salah!", "Gagal Login", "error");
+            return;
+        }
+
+        // Jika data ditemukan & cocok
         isAdminLoggedIn = true;
         document.getElementById('adminAuthModal').style.display = 'none';
+        
         switchView('admin');
         renderAdminTable();
-        showCustomAlert("Selamat datang di Portal Admin Sarpras SMKN 26 Jakarta.", "Autentikasi Berhasil", "success");
-    } else {
-        showCustomAlert("Username atau Password Admin tidak valid!", "Gagal Login", "error");
+        showCustomAlert(`Selamat datang, ${data.nama_petugas}!`, "Autentikasi Berhasil", "success");
+
+    } catch (err) {
+        showCustomAlert("Terjadi kesalahan saat verifikasi: " + err.message, "Kesalahan Sistem", "error");
     }
 }
 

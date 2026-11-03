@@ -130,20 +130,31 @@
                                 <input type="text" id="formOrganisasi" required placeholder="Contoh: OSIS / Guru RPL" class="form-control">
                             </div>
                         </div>
+
+                        <!-- BARIS RENTANG TANGGAL PINJAM -->
                         <div class="form-grid-flex" style="margin-bottom: 20px;">
                             <div style="flex:1;">
-                                <label style="display:block; font-size: 13px; font-weight: 800; margin-bottom: 8px; color: #334155;">TANGGAL PINJAM *</label>
-                                <input type="date" id="formTanggal" required class="form-control">
+                                <label style="display:block; font-size: 13px; font-weight: 800; margin-bottom: 8px; color: #334155;">TANGGAL MULAI *</label>
+                                <input type="date" id="formTanggalMulai" required class="form-control">
                             </div>
                             <div style="flex:1;">
-                                <label style="display:block; font-size: 13px; font-weight: 800; margin-bottom: 8px; color: #334155;">JAM MULAI *</label>
+                                <label style="display:block; font-size: 13px; font-weight: 800; margin-bottom: 8px; color: #334155;">TANGGAL SELESAI *</label>
+                                <input type="date" id="formTanggalSelesai" required class="form-control">
+                            </div>
+                        </div>
+
+                        <!-- BARIS JAM OPERASIONAL HARIAN -->
+                        <div class="form-grid-flex" style="margin-bottom: 20px;">
+                            <div style="flex:1;">
+                                <label style="display:block; font-size: 13px; font-weight: 800; margin-bottom: 8px; color: #334155;">JAM MULAI (SETIAP HARI) *</label>
                                 <input type="time" id="formJamMulai" required class="form-control">
                             </div>
                             <div style="flex:1;">
-                                <label style="display:block; font-size: 13px; font-weight: 800; margin-bottom: 8px; color: #334155;">JAM SELESAI *</label>
+                                <label style="display:block; font-size: 13px; font-weight: 800; margin-bottom: 8px; color: #334155;">JAM SELESAI (SETIAP HARI) *</label>
                                 <input type="time" id="formJamSelesai" required class="form-control">
                             </div>
                         </div>
+
                         <div style="margin-bottom: 24px;">
                             <label style="display:block; font-size: 13px; font-weight: 800; margin-bottom: 8px; color: #334155;">AGENDA / KEGIATAN *</label>
                             <textarea id="formTujuan" rows="4" placeholder="Jelaskan rincian agenda acara..." required class="form-control"></textarea>

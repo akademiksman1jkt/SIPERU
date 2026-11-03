@@ -132,7 +132,13 @@ function renderCalendar() {
             } else {
                 hasDaysInRow = true;
                 const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(dayCounter).padStart(2, '0')}`;
-                const approvedEvents = localReservations.filter(r => r.tanggal_pinjam === dateStr && r.status === 'APPROVED');
+
+                // Filter permohonan yang disetujui dan mencakup tanggal sel ini
+                const approvedEvents = localReservations.filter(r => {
+                    const tglMulai = r.tanggal_pinjam;
+                    const tglSelesai = r.tanggal_selesai || r.tanggal_pinjam;
+                    return r.status === 'APPROVED' && (dateStr >= tglMulai && dateStr <= tglSelesai);
+                });
 
                 const isToday = isCurrentMonthReal && (dayCounter === realToday.getDate());
                 const bgStyle = isToday ? 'background-color: #fef08a; border: 2px solid #b45309;' : '';
@@ -212,33 +218,43 @@ async function handleFormSubmit(e) {
     e.preventDefault();
     
     const roomId = parseInt(document.getElementById('formRoomId').value);
-    const tgl = document.getElementById('formTanggal').value;
+    const tglMulai = document.getElementById('formTanggalMulai').value;
+    const tglSelesai = document.getElementById('formTanggalSelesai').value || tglMulai;
     const jamMulai = document.getElementById('formJamMulai').value;
     const jamSelesai = document.getElementById('formJamSelesai').value;
+
+    if (tglSelesai < tglMulai) {
+        showCustomAlert("Tanggal selesai tidak boleh lebih awal dari tanggal mulai!", "Input Tidak Valid", "error");
+        return;
+    }
 
     const payload = {
         room_id: roomId,
         nama_peminjam: document.getElementById('formNama').value,
         identitas: document.getElementById('formIdentitas').value,
         unit_organisasi: document.getElementById('formOrganisasi').value,
-        tanggal_pinjam: tgl,
+        tanggal_pinjam: tglMulai,
+        tanggal_selesai: tglSelesai,
         jam_mulai: jamMulai,
         jam_selesai: jamSelesai,
         tujuan_kegiatan: document.getElementById('formTujuan').value,
         status: 'PENDING'
     };
 
-    // 1. Cek Potensi Bentrok dengan Agenda yang Sudah Disetujui (APPROVED)
+    // Deteksi bentrok tanggal & jam dengan agenda disetujui (APPROVED)
     const isConflict = localReservations.some(r => {
-        if (r.room_id === roomId && r.tanggal_pinjam === tgl && r.status === 'APPROVED') {
-            // Cek irisan waktu (Overlap Time)
-            return (jamMulai < r.jam_selesai && jamSelesai > r.jam_mulai);
+        const rSelesai = r.tanggal_selesai || r.tanggal_pinjam;
+        if (r.room_id === roomId && r.status === 'APPROVED') {
+            // Cek irisan tanggal
+            const overlapDate = (tglMulai <= rSelesai && tglSelesai >= r.tanggal_pinjam);
+            // Cek irisan jam
+            const overlapTime = (jamMulai < r.jam_selesai && jamSelesai > r.jam_mulai);
+            return overlapDate && overlapTime;
         }
         return false;
     });
 
     try {
-        // 2. Permohonan Tetap Dikirim ke Database Supabase
         const { error } = await supabaseClient.from('reservations').insert([payload]);
         if (error) throw error;
         
@@ -246,21 +262,15 @@ async function handleFormSubmit(e) {
         await fetchReservations();
         switchView('agenda');
 
-        // 3. Tampilkan Notifikasi Sesuai Kondisi Bentrok
         if (isConflict) {
             showCustomAlert(
-                "Permohonan Anda berhasil dikirim (Status: PENDING). Catatan: Ruangan dan jam ini terdeteksi memiliki agenda lain yang sudah disetujui. Keputusan persetujuan penuh berada di tangan Admin Sarpras.", 
-                "Peringatan Potensi Bentrok", 
+                "Permohonan berhasil dikirim (Status: PENDING). Catatan: Ruangan & rentang waktu ini memiliki jadwal yang bentrok dengan permohonan lain. Keputusan persetujuan penuh ada di tangan Admin Sarpras.", 
+                "Peringatan Bentrok", 
                 "info"
             );
         } else {
-            showCustomAlert(
-                "Permohonan peminjaman berhasil dikirim! Menunggu persetujuan Admin Sarpras.", 
-                "Pengajuan Berhasil", 
-                "success"
-            );
+            showCustomAlert("Permohonan peminjaman berhasil dikirim! Menunggu persetujuan Admin Sarpras.", "Pengajuan Berhasil", "success");
         }
-
     } catch (err) {
         showCustomAlert("Gagal mengirim permohonan: " + err.message, "Kesalahan Sistem", "error");
     }
@@ -318,21 +328,23 @@ function renderAdminTable() {
     if (!tbody) return;
 
     tbody.innerHTML = localReservations.map(item => {
-        // Cek apakah permohonan ini bentrok dengan permohonan LAIN di database
-        // Bentrok = Ruangan sama, Tanggal sama, Jam beririsan, dan ID tidak sama
+        const tglSelesaiStr = item.tanggal_selesai && item.tanggal_selesai !== item.tanggal_pinjam 
+            ? ` s.d ${item.tanggal_selesai}` 
+            : '';
+
+        // Deteksi bentrok antar permohonan
         const isConflict = localReservations.some(other => {
-            if (other.id !== item.id && 
-                other.room_id === item.room_id && 
-                other.tanggal_pinjam === item.tanggal_pinjam &&
-                other.status !== 'REJECTED') { // Menghiraukan permohonan yang sudah ditolak
-                
-                // Cek irisan rentang waktu (Overlap Time Check)
-                return (item.jam_mulai < other.jam_selesai && item.jam_selesai > other.jam_mulai);
+            if (other.id !== item.id && other.room_id === item.room_id && other.status !== 'REJECTED') {
+                const itemSelesai = item.tanggal_selesai || item.tanggal_pinjam;
+                const otherSelesai = other.tanggal_selesai || other.tanggal_pinjam;
+
+                const overlapDate = (item.tanggal_pinjam <= otherSelesai && itemSelesai >= other.tanggal_pinjam);
+                const overlapTime = (item.jam_mulai < other.jam_selesai && item.jam_selesai > other.jam_mulai);
+                return overlapDate && overlapTime;
             }
             return false;
         });
 
-        // Gaya tampilan jika terdeteksi bentrok
         const rowBgStyle = isConflict 
             ? 'background-color: #fff1f2; border-left: 4px solid #f43f5e;' 
             : 'border-bottom: 1px solid #cbd5e1;';
@@ -344,7 +356,7 @@ function renderAdminTable() {
         return `
             <tr style="${rowBgStyle}">
                 <td style="padding: 12px;">
-                    <strong>${item.tanggal_pinjam}</strong>
+                    <strong>${item.tanggal_pinjam}${tglSelesaiStr}</strong>
                     ${conflictBadge}
                 </td>
                 <td style="padding: 12px;">

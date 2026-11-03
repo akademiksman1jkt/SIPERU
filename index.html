@@ -115,18 +115,30 @@
                         Form Permohonan Pinjam Ruangan
                     </h3>
                     <form id="bookingForm" onsubmit="handleFormSubmit(event)">
-                        <div style="margin-bottom: 20px;">
-                            <label style="display:block; font-size: 13px; font-weight: 800; margin-bottom: 8px; color: #334155;">PILIH RUANGAN *</label>
-                            <select id="formRoomId" required class="form-control">
-                                <option value="">-- Memuat Ruangan --</option>
-                            </select>
+                        
+                        <!-- BARIS SELEKSI RUANGAN BERTINGKAT -->
+                        <div class="form-grid-flex" style="margin-bottom: 20px;">
+                            <div style="flex:1;">
+                                <label style="display:block; font-size: 13px; font-weight: 800; margin-bottom: 8px; color: #334155;">KATEGORI RUANGAN *</label>
+                                <select id="formKategoriFilter" required class="form-control" onchange="handleKategoriChange()">
+                                    <option value="">-- Pilih Kategori --</option>
+                                    <!-- Diisi secara dinamis via JS -->
+                                </select>
+                            </div>
+                            <div style="flex:1;">
+                                <label style="display:block; font-size: 13px; font-weight: 800; margin-bottom: 8px; color: #334155;">DETAIL RUANGAN *</label>
+                                <select id="formRoomId" required class="form-control" disabled>
+                                    <option value="">-- Pilih Kategori Terlebih Dahulu --</option>
+                                </select>
+                            </div>
                         </div>
+
                         <div style="margin-bottom: 20px;">
                             <label style="display:block; font-size: 13px; font-weight: 800; margin-bottom: 8px; color: #334155;">NAMA PEMOHON / PENANGGUNG JAWAB *</label>
                             <input type="text" id="formNama" required placeholder="Nama Lengkap Pemohon" class="form-control">
                         </div>
 
-                        <!-- BARIS IDENTITAS, ORGANISASI & JUMLAH PESERTA -->
+                        <!-- BARIS IDENTITAS, INSTANSI & JUMLAH PESERTA -->
                         <div class="form-grid-flex" style="margin-bottom: 20px;">
                             <div style="flex:1;">
                                 <label style="display:block; font-size: 13px; font-weight: 800; margin-bottom: 8px; color: #334155;">NIS / NIP *</label>

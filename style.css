@@ -1,0 +1,395 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+    --brand-dark: #0f172a;        /* Navy Gelap Institusional */
+    --brand-border: #94a3b8;      /* Garis abu-abu tegas */
+    --brand-border-light: #cbd5e1;
+    --accent-blue: #1e3a8a;       /* Biru Resmi */
+    --accent-amber: #b45309;      /* Emas/Amber Muted */
+    --bg-main: #e2e8f0;           /* Background Utama Abu-abu Soft */
+    --bg-card: #ffffff;
+    --bg-calendar-cell: #f1f5f9; /* Latar Sel Kalender Abu-abu Soft */
+    --text-main: #0f172a;
+    --text-muted: #475569;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-size: 15px; /* Ukuran font dasar diperbesar agar leluasa dibaca */
+    line-height: 1.6;
+}
+
+/* --- HEADER TOPBAR RESMI --- */
+.school-header {
+    background-color: var(--brand-dark);
+    color: #ffffff;
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 4px solid var(--accent-amber);
+    gap: 16px;
+}
+
+.brand-section {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.school-logo-badge {
+    background: #ffffff;
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    padding: 4px;
+    border: 1px solid var(--brand-border-light);
+    flex-shrink: 0;
+}
+
+.school-logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.app-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: 0.2px;
+}
+
+.app-subtitle {
+    font-size: 13px;
+    color: #cbd5e1;
+    font-weight: 500;
+}
+
+/* --- TOMBOL RESMI (Bukan Warna Blok AI) --- */
+.btn-official {
+    background-color: var(--brand-dark);
+    color: #ffffff;
+    border: 1px solid var(--brand-dark);
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-official:hover {
+    background-color: var(--accent-blue);
+    border-color: var(--accent-blue);
+}
+
+.btn-admin-header {
+    background-color: #ffffff;
+    color: var(--brand-dark);
+    border: 1px solid var(--brand-border-light);
+    padding: 8px 18px;
+    font-size: 13px;
+    font-weight: 700;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-admin-header:hover {
+    background-color: #f8fafc;
+}
+
+/* --- APP CONTAINER LAYOUT --- */
+.app-container {
+    display: flex;
+    flex: 1;
+}
+
+/* --- SIDEBAR NAV --- */
+.sidebar-nav {
+    width: 260px;
+    background: #ffffff;
+    border-right: 2px solid var(--brand-border-light);
+    padding: 24px 0;
+    flex-shrink: 0;
+    transition: width 0.25s ease, padding 0.25s ease;
+}
+
+.sidebar-nav.collapsed {
+    width: 0;
+    padding: 0;
+    border-right: none;
+    overflow: hidden;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px 16px;
+    border-bottom: 2px solid var(--bg-main);
+    margin-bottom: 16px;
+}
+
+.sidebar-title {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.nav-menu-item {
+    display: flex;
+    align-items: center;
+    padding: 14px 24px;
+    color: #334155;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    border-left: 4px solid transparent;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.nav-menu-item:hover {
+    background-color: #f1f5f9;
+    color: var(--brand-dark);
+}
+
+.nav-menu-item.active {
+    background-color: #e2e8f0;
+    color: var(--brand-dark);
+    border-left-color: var(--brand-dark);
+    font-weight: 800;
+}
+
+/* --- CONTENT AREA --- */
+.content-area {
+    flex: 1;
+    padding: 32px;
+    overflow-x: hidden;
+}
+
+.official-card {
+    background: #ffffff;
+    border: 2px solid var(--brand-border-light);
+    border-radius: 6px;
+    margin-bottom: 24px;
+    overflow: hidden;
+}
+
+.card-header-bar {
+    padding: 18px 24px;
+    background: #f8fafc;
+    border-bottom: 2px solid var(--brand-border-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+/* --- PERBAIKAN KATALOG RUANGAN (Tanpa Kotak Kuning-Biru AI) --- */
+.room-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+}
+
+.room-card {
+    background: #ffffff;
+    border: 2px solid var(--brand-border-light);
+    border-radius: 6px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.room-card-header {
+    background: #f8fafc;
+    color: var(--brand-dark);
+    padding: 16px 20px;
+    font-weight: 800;
+    font-size: 16px;
+    border-bottom: 2px solid var(--brand-border-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.room-badge {
+    background: #e2e8f0;
+    color: #1e293b;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 4px;
+    border: 1px solid var(--brand-border-light);
+}
+
+.room-body {
+    padding: 20px;
+    font-size: 14px;
+    color: var(--text-muted);
+    flex: 1;
+    line-height: 1.7;
+}
+
+.room-body strong {
+    color: var(--brand-dark);
+}
+
+.room-card-footer {
+    padding: 16px 20px;
+    background: #ffffff;
+    border-top: 1px solid var(--brand-border-light);
+}
+
+/* --- PERBAIKAN KALENDER (Warna Abu-Abu & Garis Pembatas Clear) --- */
+.calendar-responsive-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.table-calendar {
+    width: 100%;
+    min-width: 750px;
+    border-collapse: collapse;
+    background: #ffffff;
+}
+
+.table-calendar th {
+    background: var(--brand-dark);
+    color: #ffffff;
+    padding: 14px 10px;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    text-align: center;
+    border: 2px solid var(--brand-dark);
+}
+
+.table-calendar td {
+    border: 2px solid var(--brand-border-light); /* Garis kisi kalender terlihat tegas */
+    background-color: var(--bg-calendar-cell);  /* Warna dasar sel kalender abu-abu soft */
+    height: 110px;
+    vertical-align: top;
+    padding: 10px;
+    width: 14.28%;
+}
+
+.table-calendar td:hover {
+    background-color: #e2e8f0;
+}
+
+.date-num {
+    font-size: 14px;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 8px;
+}
+
+.event-tag {
+    background-color: #dcfce7;
+    color: #14532d;
+    border: 1px solid #86efac;
+    padding: 4px 8px;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 4px;
+    margin-top: 4px;
+    word-break: break-word;
+}
+
+/* --- FORM PEMINJAMAN --- */
+.form-control {
+    width: 100%;
+    padding: 12px 14px;
+    border: 2px solid var(--brand-border-light);
+    border-radius: 4px;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--text-main);
+    background-color: #ffffff;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--brand-dark);
+}
+
+.form-grid-flex {
+    display: flex;
+    gap: 20px;
+}
+
+/* --- MOBILE RESPONSIVE --- */
+@media (max-width: 768px) {
+    .app-container {
+        flex-direction: column;
+    }
+
+    .sidebar-nav {
+        width: 100%;
+        border-right: none;
+        border-bottom: 2px solid var(--brand-border-light);
+        padding: 0;
+        display: flex;
+        overflow-x: auto;
+    }
+
+    .sidebar-nav.collapsed {
+        display: none;
+    }
+
+    .sidebar-header {
+        display: none;
+    }
+
+    .nav-menu-item {
+        padding: 14px 18px;
+        border-left: none;
+        border-bottom: 4px solid transparent;
+        font-size: 13px;
+    }
+
+    .nav-menu-item.active {
+        border-bottom-color: var(--brand-dark);
+    }
+
+    .content-area {
+        padding: 16px;
+    }
+
+    .form-grid-flex {
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .school-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .school-header > div:last-child {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 10px;
+    }
+}

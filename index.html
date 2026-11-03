@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIPERU SMKN 26 Jakarta - Sistem Informasi Sarpras</title>
+    
+    <!-- Favicon (.ico) -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Header Portal Sekolah -->
+    <header class="school-header">
+        <div class="brand-section">
+            <button onclick="toggleSidebar()" class="btn-admin-header" style="padding: 6px 12px; margin-right: 4px;" title="Sembunyikan/Tampilkan Menu">
+                ☰
+            </button>
+            
+            <div class="school-logo-badge">
+                <img src="https://i.ibb.co.com/PvrjfLnW/smkn-26.jpg" alt="Logo SMKN 26 Jakarta" class="school-logo-img">
+            </div>
+
+            <div>
+                <div class="app-title">SIPERU SMKN 26 JAKARTA</div>
+                <div class="app-subtitle">Sistem Informasi Peminjaman Sarana & Prasarana Sekolah</div>
+            </div>
+        </div>
+        <div>
+            <span style="font-size: 13px; color: #cbd5e1; margin-right: 16px;">WIB: <strong id="clockWIB" style="color: #fff;">--:--:--</strong></span>
+            <button onclick="toggleAdminModal()" class="btn-admin-header">
+                PORTAL ADMIN
+            </button>
+        </div>
+    </header>
+
+    <!-- App Container Layout -->
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside id="mainSidebar" class="sidebar-nav">
+            <div class="sidebar-header">
+                <span class="sidebar-title">MENU UTAMA</span>
+                <button onclick="toggleSidebar()" class="btn-admin-header" style="padding: 2px 8px; font-size: 11px;">✕</button>
+            </div>
+            <a href="javascript:void(0)" onclick="switchView('agenda')" id="nav-agenda" class="nav-menu-item active">
+                <span>Agenda & Kalender</span>
+            </a>
+            <a href="javascript:void(0)" onclick="switchView('katalog')" id="nav-katalog" class="nav-menu-item">
+                <span>Katalog Ruangan</span>
+            </a>
+            <a href="javascript:void(0)" onclick="switchView('pinjam')" id="nav-pinjam" class="nav-menu-item">
+                <span>Form Peminjaman</span>
+            </a>
+        </aside>
+
+        <!-- Area Konten Utama -->
+        <main class="content-area">
+
+            <!-- TAMPILAN 1: AGENDA & KALENDER -->
+            <section id="view-agenda">
+                <div class="official-card">
+                    <div class="card-header-bar">
+                        <h3 style="font-size: 16px; font-weight: 800; color: #0f172a; margin: 0;">JADWAL PENGGUNAAN RUANGAN</h3>
+                        <div>
+                            <button onclick="changeMonth(-1)" class="btn-official" style="padding: 6px 14px;">&laquo; Prev</button>
+                            <span id="calendarMonthYear" style="font-weight: 800; padding: 0 16px; font-size: 15px;">Maret 2026</span>
+                            <button onclick="changeMonth(1)" class="btn-official" style="padding: 6px 14px;">Next &raquo;</button>
+                        </div>
+                    </div>
+                    <div class="calendar-responsive-wrapper">
+                        <table class="table-calendar">
+                            <thead>
+                                <tr>
+                                    <th style="color: #f87171;">MINGGU</th>
+                                    <th>SENIN</th>
+                                    <th>SELASA</th>
+                                    <th>RABU</th>
+                                    <th>KAMIS</th>
+                                    <th>JUMAT</th>
+                                    <th style="color: #fbbf24;">SABTU</th>
+                                </tr>
+                            </thead>
+                            <tbody id="calendarGridBody">
+                                <!-- Rendered via JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAMPILAN 2: KATALOG RUANGAN -->
+            <section id="view-katalog" style="display: none;">
+                <div class="official-card" style="padding: 28px;">
+                    <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 24px; color: #0f172a;">Fasilitas Ruangan SMKN 26 Jakarta</h3>
+                    <div id="roomsCatalogGrid" class="room-grid">
+                        <!-- Rendered via JavaScript -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAMPILAN 3: FORM PEMINJAMAN -->
+            <section id="view-pinjam" style="display: none;">
+                <div class="official-card" style="max-width: 720px; margin: 0 auto; padding: 32px;">
+                    <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 24px; color: #0f172a; border-bottom: 2px solid #0f172a; padding-bottom: 12px;">
+                        Form Permohonan Pinjam Ruangan
+                    </h3>
+                    <form id="bookingForm" onsubmit="handleFormSubmit(event)">
+                        <div style="margin-bottom: 20px;">
+                            <label style="display:block; font-size: 13px; font-weight: 800; margin-bottom: 8px; color: #334155;">PILIH RUANGAN *</label>
+                            <select id="formRoomId" required class="form-control">
+                                <option value="">-- Memuat Ruangan --</option>
+                            </select>
+                        </div>
+                        <div style="margin-bottom: 20px;">
+                            <label style="display:block; font-size: 13px; font-weight: 800; margin-bottom: 8px; color: #334155;">NAMA PEMOHON / PENANGGUNG JAWAB *</label>
+                            <input type="text" id="formNama" required placeholder="Nama Lengkap Pemohon" class="form-control">
+                        </div>
+                        <div class="form-grid-flex" style="margin-bottom: 20px;">
+                            <div style="flex:1;">
+                                <label style="display:block; font-size: 13px; font-weight: 800; margin-bottom: 8px; color: #334155;">NIS / NIP *</label>
+                                <input type="text" id="formIdentitas" required placeholder="Nomor NIS atau NIP" class="form-control">
+                            </div>
+                            <div style="flex:1;">
+                                <label style="display:block; font-size: 13px; font-weight: 800; margin-bottom: 8px; color: #334155;">ORGANISASI / EKSTRAKURIKULER *</label>
+                                <input type="text" id="formOrganisasi" required placeholder="Contoh: OSIS / Guru RPL" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-grid-flex" style="margin-bottom: 20px;">
+                            <div style="flex:1;">
+                                <label style="display:block; font-size: 13px; font-weight: 800; margin-bottom: 8px; color: #334155;">TANGGAL PINJAM *</label>
+                                <input type="date" id="formTanggal" required class="form-control">
+                            </div>
+                            <div style="flex:1;">
+                                <label style="display:block; font-size: 13px; font-weight: 800; margin-bottom: 8px; color: #334155;">JAM MULAI *</label>
+                                <input type="time" id="formJamMulai" required class="form-control">
+                            </div>
+                            <div style="flex:1;">
+                                <label style="display:block; font-size: 13px; font-weight: 800; margin-bottom: 8px; color: #334155;">JAM SELESAI *</label>
+                                <input type="time" id="formJamSelesai" required class="form-control">
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 24px;">
+                            <label style="display:block; font-size: 13px; font-weight: 800; margin-bottom: 8px; color: #334155;">AGENDA / KEGIATAN *</label>
+                            <textarea id="formTujuan" rows="4" placeholder="Jelaskan rincian agenda acara..." required class="form-control"></textarea>
+                        </div>
+                        <button type="submit" class="btn-official" style="width: 100%; padding: 14px; font-size: 15px;">KIRIM FORM PERMOHONAN</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- TAMPILAN 4: DASHBOARD ADMIN -->
+            <section id="view-admin" style="display: none;">
+                <div class="official-card" style="padding: 28px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #cbd5e1; padding-bottom: 14px;">
+                        <h3 style="font-size: 18px; font-weight: 800; color: #0f172a; margin: 0;">Panel Persetujuan Sarpras</h3>
+                        <button onclick="logoutAdmin()" class="btn-official" style="background: #dc2626; border-color: #dc2626;">Keluar Admin</button>
+                    </div>
+                    <div class="table-responsive-wrapper">
+                        <table style="width:100%; min-width: 700px; border-collapse: collapse; font-size: 13px;">
+                            <thead>
+                                <tr style="background: #0f172a; color: #fff; text-align: left;">
+                                    <th style="padding: 14px;">TANGGAL</th>
+                                    <th style="padding: 14px;">PEMOHON</th>
+                                    <th style="padding: 14px;">RUANGAN</th>
+                                    <th style="padding: 14px;">JAM & KEGIATAN</th>
+                                    <th style="padding: 14px;">STATUS</th>
+                                    <th style="padding: 14px; text-align: center;">AKSI VERIFIKASI</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminTableBody">
+                                <!-- Rendered via JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- MODAL LOGIN ADMIN -->
+    <div id="adminAuthModal" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.75); justify-content: center; align-items: center; z-index: 99;">
+        <div style="background: #ffffff; padding: 32px; border-radius: 6px; width: 360px; border: 2px solid var(--brand-border-light);">
+            <h4 style="font-size: 18px; font-weight: 800; margin-top: 0; margin-bottom: 16px; color: #0f172a;">Login Petugas Sarpras</h4>
+            <form onsubmit="handleAdminLogin(event)">
+                <div style="margin-bottom: 16px;">
+                    <label style="font-size: 12px; font-weight: 800; display: block; margin-bottom: 6px; color: #334155;">USERNAME</label>
+                    <input type="text" id="adminUser" required class="form-control">
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label style="font-size: 12px; font-weight: 800; display: block; margin-bottom: 6px; color: #334155;">PASSWORD</label>
+                    <input type="password" id="adminPass" required class="form-control">
+                </div>
+                <div style="display: flex; gap: 12px;">
+                    <button type="button" onclick="toggleAdminModal()" style="flex:1; padding: 10px; border: 2px solid #cbd5e1; background:#fff; font-weight:bold; cursor:pointer;">Batal</button>
+                    <button type="submit" class="btn-official" style="flex:1;">Masuk</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

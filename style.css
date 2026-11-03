@@ -1,14 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
 :root {
-    --brand-dark: #0f172a;        /* Navy Gelap Institusional */
-    --brand-border: #94a3b8;      /* Garis abu-abu tegas */
+    --brand-dark: #0f172a;
+    --brand-border: #94a3b8;
     --brand-border-light: #cbd5e1;
-    --accent-blue: #1e3a8a;       /* Biru Resmi */
-    --accent-amber: #b45309;      /* Emas/Amber Muted */
-    --bg-main: #e2e8f0;           /* Background Utama Abu-abu Soft */
+    --accent-blue: #1e3a8a;
+    --accent-amber: #b45309;
+    --bg-main: #e2e8f0;
     --bg-card: #ffffff;
-    --bg-calendar-cell: #f1f5f9; /* Latar Sel Kalender Abu-abu Soft */
+    --bg-calendar-cell: #f1f5f9;
     --text-main: #0f172a;
     --text-muted: #475569;
 }
@@ -26,11 +26,10 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    font-size: 15px; /* Ukuran font dasar diperbesar agar leluasa dibaca */
+    font-size: 15px;
     line-height: 1.6;
 }
 
-/* --- HEADER TOPBAR RESMI --- */
 .school-header {
     background-color: var(--brand-dark);
     color: #ffffff;
@@ -80,7 +79,6 @@ body {
     font-weight: 500;
 }
 
-/* --- TOMBOL RESMI (Bukan Warna Blok AI) --- */
 .btn-official {
     background-color: var(--brand-dark);
     color: #ffffff;
@@ -113,13 +111,11 @@ body {
     background-color: #f8fafc;
 }
 
-/* --- APP CONTAINER LAYOUT --- */
 .app-container {
     display: flex;
     flex: 1;
 }
 
-/* --- SIDEBAR NAV --- */
 .sidebar-nav {
     width: 260px;
     background: #ffffff;
@@ -178,7 +174,6 @@ body {
     font-weight: 800;
 }
 
-/* --- CONTENT AREA --- */
 .content-area {
     flex: 1;
     padding: 32px;
@@ -203,7 +198,6 @@ body {
     gap: 12px;
 }
 
-/* --- PERBAIKAN KATALOG RUANGAN (Tanpa Kotak Kuning-Biru AI) --- */
 .room-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -259,7 +253,6 @@ body {
     border-top: 1px solid var(--brand-border-light);
 }
 
-/* --- PERBAIKAN KALENDER (Warna Abu-Abu & Garis Pembatas Clear) --- */
 .calendar-responsive-wrapper {
     width: 100%;
     overflow-x: auto;
@@ -284,8 +277,8 @@ body {
 }
 
 .table-calendar td {
-    border: 2px solid var(--brand-border-light); /* Garis kisi kalender terlihat tegas */
-    background-color: var(--bg-calendar-cell);  /* Warna dasar sel kalender abu-abu soft */
+    border: 2px solid var(--brand-border-light);
+    background-color: var(--bg-calendar-cell);
     height: 110px;
     vertical-align: top;
     padding: 10px;
@@ -315,7 +308,6 @@ body {
     word-break: break-word;
 }
 
-/* --- FORM PEMINJAMAN --- */
 .form-control {
     width: 100%;
     padding: 12px 14px;
@@ -337,7 +329,6 @@ body {
     gap: 20px;
 }
 
-/* --- MOBILE RESPONSIVE --- */
 @media (max-width: 768px) {
     .app-container {
         flex-direction: column;

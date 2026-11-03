@@ -106,8 +106,11 @@ function selectRoomForBooking(id) {
 }
 
 // Render Grid Kalender dengan Event Klik Sel
+// Render Grid Kalender Modern
 function renderCalendar() {
     const tbody = document.getElementById('calendarGridBody');
+    if (!tbody) return;
+
     tbody.innerHTML = '';
 
     const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
@@ -128,12 +131,12 @@ function renderCalendar() {
 
         for (let col = 0; col < 7; col++) {
             if ((row === 0 && col < firstDay) || dayCounter > daysInMonth) {
-                rowHtml += `<td style="background: #e2e8f0;"></td>`;
+                rowHtml += `<td class="empty-cell"></td>`;
             } else {
                 hasDaysInRow = true;
                 const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(dayCounter).padStart(2, '0')}`;
 
-                // Filter permohonan yang disetujui dan mencakup tanggal sel ini
+                // Filter permohonan yang disetujui (APPROVED)
                 const approvedEvents = localReservations.filter(r => {
                     const tglMulai = r.tanggal_pinjam;
                     const tglSelesai = r.tanggal_selesai || r.tanggal_pinjam;
@@ -141,18 +144,19 @@ function renderCalendar() {
                 });
 
                 const isToday = isCurrentMonthReal && (dayCounter === realToday.getDate());
-                const bgStyle = isToday ? 'background-color: #fef08a; border: 2px solid #b45309;' : '';
+                const todayClass = isToday ? 'today-badge' : '';
 
                 let eventsHtml = approvedEvents.map(e => `
-                    <div class="event-tag">
-                        ${e.jam_mulai.substring(0,5)} | ${e.rooms?.nama_ruangan || 'Ruangan'}
+                    <div class="event-tag-modern" title="${e.rooms?.nama_ruangan || 'Ruangan'} (${e.jam_mulai.substring(0,5)} - ${e.jam_selesai.substring(0,5)})">
+                        <span class="event-dot"></span>
+                        <span style="overflow: hidden; text-overflow: ellipsis;">${e.jam_mulai.substring(0,5)} ${e.rooms?.nama_ruangan || 'Ruangan'}</span>
                     </div>
                 `).join('');
 
                 rowHtml += `
-                    <td onclick="openEventModal('${dateStr}')" style="${bgStyle} cursor: pointer;">
-                        <div class="date-num" style="${isToday ? 'color: #b45309; font-size:15px;' : ''}">
-                            ${dayCounter} ${isToday ? '<span style="font-size:10px; background:#b45309; color:#fff; padding:1px 4px; border-radius:3px; margin-left:4px;">Hari Ini</span>' : ''}
+                    <td onclick="openEventModal('${dateStr}')" class="${todayClass}" style="cursor: pointer;">
+                        <div class="date-header">
+                            <span class="date-num">${dayCounter}</span>
                         </div>
                         ${eventsHtml}
                     </td>

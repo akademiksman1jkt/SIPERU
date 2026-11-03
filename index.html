@@ -219,6 +219,21 @@
             </div>
         </div>
     </div>
+    <!-- MODAL NOTIFIKASI MODERN (Pengganti Alert Browser) -->
+    <div id="customAlertModal" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(4px); justify-content: center; align-items: center; z-index: 1000; padding: 20px;">
+        <div style="background: #ffffff; border-radius: 8px; width: 100%; max-width: 420px; border: 2px solid var(--brand-border-light); overflow: hidden; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2); text-align: center;">
+            <div id="alertHeaderBg" style="background: var(--brand-dark); color: #ffffff; padding: 18px 20px;">
+                <div id="alertIcon" style="font-size: 28px; margin-bottom: 6px;">ℹ️</div>
+                <h4 id="alertTitle" style="font-size: 16px; font-weight: 800; margin: 0;">Informasi Sistem</h4>
+            </div>
+            <div style="padding: 24px 20px;">
+                <p id="alertMessage" style="font-size: 14px; color: #334155; margin: 0; line-height: 1.6;"></p>
+            </div>
+            <div style="padding: 14px 20px; background: #f8fafc; border-top: 1px solid var(--brand-border-light); display: flex; justify-content: center;">
+                <button onclick="closeCustomAlert()" class="btn-official" style="padding: 10px 24px; min-width: 120px;">OK</button>
+            </div>
+        </div>
+    </div>
     <script src="app.js"></script>
 </body>
 </html>

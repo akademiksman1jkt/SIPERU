@@ -107,6 +107,9 @@ function selectRoomForBooking(id) {
 
 // Render Grid Kalender dengan Event Klik Sel
 // Render Grid Kalender Modern
+// =========================================================
+// RENDER KALENDER (NAMA RUANGAN + WARNA UNIK PER RUANGAN)
+// =========================================================
 function renderCalendar() {
     const tbody = document.getElementById('calendarGridBody');
     if (!tbody) return;
@@ -146,12 +149,20 @@ function renderCalendar() {
                 const isToday = isCurrentMonthReal && (dayCounter === realToday.getDate());
                 const todayClass = isToday ? 'today-badge' : '';
 
-                let eventsHtml = approvedEvents.map(e => `
-                    <div class="event-tag-modern" title="${e.rooms?.nama_ruangan || 'Ruangan'} (${e.jam_mulai.substring(0,5)} - ${e.jam_selesai.substring(0,5)})">
-                        <span class="event-dot"></span>
-                        <span style="overflow: hidden; text-overflow: ellipsis;">${e.jam_mulai.substring(0,5)} ${e.rooms?.nama_ruangan || 'Ruangan'}</span>
-                    </div>
-                `).join('');
+                let eventsHtml = approvedEvents.map(e => {
+                    const namaRuangan = e.rooms?.nama_ruangan || 'Ruangan';
+                    // Pemetaan langsung ke class room-color-1 s.d room-color-7
+                    const colorClass = (e.room_id >= 1 && e.room_id <= 7) 
+                        ? `room-color-${e.room_id}` 
+                        : 'event-tag-default';
+
+                    return `
+                        <div class="event-tag-modern ${colorClass}" title="${namaRuangan} (${e.jam_mulai.substring(0,5)} - ${e.jam_selesai.substring(0,5)} WIB)">
+                            <span class="event-dot"></span>
+                            <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${namaRuangan}</span>
+                        </div>
+                    `;
+                }).join('');
 
                 rowHtml += `
                     <td onclick="openEventModal('${dateStr}')" class="${todayClass}" style="cursor: pointer;">

@@ -329,9 +329,102 @@ body {
     gap: 20px;
 }
 
+/* =========================================================
+   PERBAIKAN TAMPILAN MOBILE & TABLET (RESPONSIVE FIX)
+   ========================================================= */
 @media (max-width: 768px) {
-    .app-container {
+    /* 1. Perbaikan Header Sekolah */
+    .school-header {
+        padding: 12px 16px;
         flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    .brand-section {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .school-logo-badge {
+        width: 40px;
+        height: 40px;
+        padding: 2px;
+    }
+
+    .app-title {
+        font-size: 15px;
+        font-weight: 800;
+        line-height: 1.2;
+    }
+
+    .app-subtitle {
+        font-size: 11px;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    /* Baris kedua Header: Jam WIB & Tombol Portal Admin */
+    .school-header > div:last-child {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 8px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        margin-top: 0;
+    }
+
+    .btn-admin-header {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+
+    /* 2. Perbaikan Header Kartu Kalender (Menghilangkan Tumpukan Tombol/Bulan) */
+    .card-header-bar {
+        padding: 14px 16px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .card-header-bar h3 {
+        font-size: 14px !important;
+        width: 100%;
+    }
+
+    /* Pembungkus Tombol Navigasi Bulan di HP */
+    .card-header-bar > div:last-child {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        background: #ffffff;
+        padding: 6px;
+        border-radius: 6px;
+        border: 1px solid var(--brand-border-light);
+    }
+
+    #calendarMonthYear {
+        font-size: 13px !important;
+        padding: 0 4px !important;
+        text-align: center;
+        white-space: nowrap;
+    }
+
+    .card-header-bar .btn-official {
+        padding: 6px 10px !important;
+        font-size: 12px !important;
+        flex-shrink: 0;
+    }
+
+    /* 3. Penyesuaian Konten & Sidebar */
+    .content-area {
+        padding: 12px;
     }
 
     .sidebar-nav {
@@ -347,40 +440,9 @@ body {
         display: none;
     }
 
-    .sidebar-header {
-        display: none;
-    }
-
     .nav-menu-item {
-        padding: 14px 18px;
-        border-left: none;
-        border-bottom: 4px solid transparent;
-        font-size: 13px;
-    }
-
-    .nav-menu-item.active {
-        border-bottom-color: var(--brand-dark);
-    }
-
-    .content-area {
-        padding: 16px;
-    }
-
-    .form-grid-flex {
-        flex-direction: column;
-        gap: 14px;
-    }
-
-    .school-header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .school-header > div:last-child {
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 10px;
+        padding: 10px 14px;
+        font-size: 12px;
+        white-space: nowrap;
     }
 }

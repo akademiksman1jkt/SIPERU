@@ -203,7 +203,22 @@
             </form>
         </div>
     </div>
-
+<!-- MODAL DETAIL AGENDA TANGGAL -->
+    <div id="eventDetailModal" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); justify-content: center; align-items: center; z-index: 999; padding: 20px;">
+        <div style="background: #ffffff; border-radius: 8px; width: 100%; max-width: 500px; border: 2px solid var(--brand-border-light); overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
+            <div style="background: var(--brand-dark); color: #ffffff; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center;">
+                <h4 id="modalDateTitle" style="font-size: 16px; font-weight: 800; margin: 0;">Detail Agenda Tanggal</h4>
+                <button onclick="closeEventModal()" style="background: transparent; border: none; color: #ffffff; font-size: 18px; font-weight: bold; cursor: pointer;">✕</button>
+            </div>
+            <div id="modalEventList" style="padding: 20px; max-height: 400px; overflow-y: auto;">
+                <!-- Daftar agenda diisi lewat JavaScript -->
+            </div>
+            <div style="padding: 14px 20px; background: #f8fafc; border-top: 1px solid var(--brand-border-light); display: flex; justify-content: space-between; gap: 10px;">
+                <button onclick="closeEventModal()" class="btn-admin-header" style="padding: 8px 16px;">Tutup</button>
+                <button onclick="closeEventModal(); switchView('pinjam');" class="btn-official" style="padding: 8px 16px;">+ Ajukan Peminjaman</button>
+            </div>
+        </div>
+    </div>
     <script src="app.js"></script>
 </body>
 </html>

@@ -15,7 +15,8 @@ let localReservations = [];
 // Clock Realtime WIB
 setInterval(() => {
     const now = new Date();
-    document.getElementById('clockWIB').innerText = now.toLocaleTimeString('id-ID');
+    const clockEl = document.getElementById('clockWIB');
+    if (clockEl) clockEl.innerText = now.toLocaleTimeString('id-ID');
 }, 1000);
 
 window.addEventListener('DOMContentLoaded', async () => {
@@ -26,12 +27,16 @@ window.addEventListener('DOMContentLoaded', async () => {
 
 function switchView(viewName) {
     ['agenda', 'katalog', 'pinjam', 'admin'].forEach(v => {
-        document.getElementById(`view-${v}`).style.display = 'none';
+        const viewEl = document.getElementById(`view-${v}`);
+        if (viewEl) viewEl.style.display = 'none';
+        
         const btn = document.getElementById(`nav-${v}`);
         if (btn) btn.classList.remove('active');
     });
 
-    document.getElementById(`view-${viewName}`).style.display = 'block';
+    const activeView = document.getElementById(`view-${viewName}`);
+    if (activeView) activeView.style.display = 'block';
+
     const activeBtn = document.getElementById(`nav-${viewName}`);
     if (activeBtn) activeBtn.classList.add('active');
 
@@ -71,24 +76,39 @@ async function fetchReservations() {
     }
 }
 
+// =========================================================
+// RENDER KATALOG RUANGAN (Mendukung ID 'roomGridContainer')
+// =========================================================
 function renderRoomsCatalog() {
-    const container = document.getElementById('roomsCatalogGrid');
+    // Mendukung ID baru 'roomGridContainer' maupun fallback 'roomsCatalogGrid'
+    const container = document.getElementById('roomGridContainer') || document.getElementById('roomsCatalogGrid');
+    if (!container) return;
+
     if (localRooms.length === 0) {
-        container.innerHTML = '<div style="padding:20px; text-align:center;">Belum ada data ruangan.</div>';
+        container.innerHTML = '<div style="padding:20px; text-align:center; color:#64748b;">Belum ada data ruangan.</div>';
         return;
     }
+
     container.innerHTML = localRooms.map(r => `
         <div class="room-card">
             <div class="room-card-header">
-                <span>${r.nama_ruangan}</span>
-                <span class="room-badge">${r.kategori}</span>
+                <span class="room-card-title">${r.nama_ruangan}</span>
+                <span class="room-badge">${r.kategori || 'Fasilitas'}</span>
             </div>
             <div class="room-body">
-                <p style="margin-bottom: 8px;"><strong>Kapasitas:</strong> ${r.kapasitas} Orang</p>
-                <p><strong>Fasilitas:</strong> ${r.fasilitas}</p>
+                <div class="room-info-item">
+                    <span class="icon">👥</span>
+                    <div><strong>Kapasitas:</strong> ${r.kapasitas} Orang</div>
+                </div>
+                <div class="room-info-item">
+                    <span class="icon">🛠️</span>
+                    <div><strong>Fasilitas:</strong> ${r.fasilitas || '-'}</div>
+                </div>
             </div>
             <div class="room-card-footer">
-                <button onclick="selectRoomForBooking(${r.id})" class="btn-official" style="width: 100%;">AJUKAN PEMINJAMAN</button>
+                <button onclick="selectRoomForBooking(${r.id})" class="btn-book-room">
+                    <span>Ajukan Peminjaman</span> &rarr;
+                </button>
             </div>
         </div>
     `).join('');
@@ -96,19 +116,19 @@ function renderRoomsCatalog() {
 
 function populateRoomSelectOptions() {
     const select = document.getElementById('formRoomId');
+    if (!select) return;
     select.innerHTML = '<option value="">-- Pilih Ruangan --</option>' + 
         localRooms.map(r => `<option value="${r.id}">${r.nama_ruangan}</option>`).join('');
 }
 
 function selectRoomForBooking(id) {
-    document.getElementById('formRoomId').value = id;
     switchView('pinjam');
+    const selectEl = document.getElementById('formRoomId');
+    if (selectEl) selectEl.value = id;
 }
 
-// Render Grid Kalender dengan Event Klik Sel
-// Render Grid Kalender Modern
 // =========================================================
-// RENDER KALENDER (NAMA RUANGAN + WARNA UNIK PER RUANGAN)
+// RENDER KALENDER (WARNA KONTRASTIF 1 S.D 7 PER RUANGAN)
 // =========================================================
 function renderCalendar() {
     const tbody = document.getElementById('calendarGridBody');
@@ -117,7 +137,8 @@ function renderCalendar() {
     tbody.innerHTML = '';
 
     const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-    document.getElementById('calendarMonthYear').innerText = `${monthNames[currentMonth]} ${currentYear}`;
+    const monthTitle = document.getElementById('calendarMonthYear');
+    if (monthTitle) monthTitle.innerText = `${monthNames[currentMonth]} ${currentYear}`;
 
     const firstDay = new Date(currentYear, currentMonth, 1).getDay();
     const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
@@ -139,7 +160,7 @@ function renderCalendar() {
                 hasDaysInRow = true;
                 const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(dayCounter).padStart(2, '0')}`;
 
-                // Filter permohonan yang disetujui (APPROVED)
+                // Filter permohonan APPROVED yang mencakup tanggal ini (Multi-day support)
                 const approvedEvents = localReservations.filter(r => {
                     const tglMulai = r.tanggal_pinjam;
                     const tglSelesai = r.tanggal_selesai || r.tanggal_pinjam;
@@ -151,7 +172,6 @@ function renderCalendar() {
 
                 let eventsHtml = approvedEvents.map(e => {
                     const namaRuangan = e.rooms?.nama_ruangan || 'Ruangan';
-                    // Pemetaan langsung ke class room-color-1 s.d room-color-7
                     const colorClass = (e.room_id >= 1 && e.room_id <= 7) 
                         ? `room-color-${e.room_id}` 
                         : 'event-tag-default';
@@ -188,12 +208,22 @@ function changeMonth(delta) {
     renderCalendar();
 }
 
-// Fungsi Menampilkan Pop-up Detail Agenda saat Tanggal Diklik
+// =========================================================
+// POP-UP DETAIL AGENDA TANGGAL (DENGAN DUKUNGAN MULTI-DAY)
+// =========================================================
 function openEventModal(dateStr) {
-    document.getElementById('modalDateTitle').innerText = `Agenda Tanggal: ${dateStr}`;
-    const listContainer = document.getElementById('modalEventList');
+    const titleEl = document.getElementById('modalDateTitle');
+    if (titleEl) titleEl.innerText = `Agenda Tanggal: ${dateStr}`;
     
-    const dayEvents = localReservations.filter(r => r.tanggal_pinjam === dateStr && r.status === 'APPROVED');
+    const listContainer = document.getElementById('modalEventList');
+    if (!listContainer) return;
+    
+    // Filter agenda yang mencakup tanggal ini
+    const dayEvents = localReservations.filter(r => {
+        const tglMulai = r.tanggal_pinjam;
+        const tglSelesai = r.tanggal_selesai || r.tanggal_pinjam;
+        return r.status === 'APPROVED' && (dateStr >= tglMulai && dateStr <= tglSelesai);
+    });
 
     if (dayEvents.length === 0) {
         listContainer.innerHTML = `
@@ -214,7 +244,7 @@ function openEventModal(dateStr) {
                 <div style="font-size: 14px; font-weight: 700; color: #1e293b; margin-bottom: 6px;">
                     Agenda: ${e.tujuan_kegiatan}
                 </div>
-                <div style="font-size: 13px; color: #64748b; border-t: 1px solid #e2e8f0; padding-top: 6px; margin-top: 6px;">
+                <div style="font-size: 13px; color: #64748b; border-top: 1px solid #e2e8f0; padding-top: 6px; margin-top: 6px;">
                     <strong>Peminjam:</strong> ${e.nama_peminjam} (${e.unit_organisasi})<br>
                     <strong>No. Identitas:</strong> ${e.identitas}
                 </div>
@@ -222,19 +252,27 @@ function openEventModal(dateStr) {
         `).join('');
     }
 
-    document.getElementById('eventDetailModal').style.display = 'flex';
+    const modal = document.getElementById('eventDetailModal');
+    if (modal) modal.style.display = 'flex';
 }
 
 function closeEventModal() {
-    document.getElementById('eventDetailModal').style.display = 'none';
+    const modal = document.getElementById('eventDetailModal');
+    if (modal) modal.style.display = 'none';
 }
 
+// =========================================================
+// SUBMIT FORM PEMINJAMAN
+// =========================================================
 async function handleFormSubmit(e) {
     e.preventDefault();
     
     const roomId = parseInt(document.getElementById('formRoomId').value);
-    const tglMulai = document.getElementById('formTanggalMulai').value;
-    const tglSelesai = document.getElementById('formTanggalSelesai').value || tglMulai;
+    const tglMulaiInput = document.getElementById('formTanggalMulai') || document.getElementById('formTanggal');
+    const tglSelesaiInput = document.getElementById('formTanggalSelesai');
+    
+    const tglMulai = tglMulaiInput ? tglMulaiInput.value : '';
+    const tglSelesai = tglSelesaiInput && tglSelesaiInput.value ? tglSelesaiInput.value : tglMulai;
     const jamMulai = document.getElementById('formJamMulai').value;
     const jamSelesai = document.getElementById('formJamSelesai').value;
 
@@ -260,9 +298,7 @@ async function handleFormSubmit(e) {
     const isConflict = localReservations.some(r => {
         const rSelesai = r.tanggal_selesai || r.tanggal_pinjam;
         if (r.room_id === roomId && r.status === 'APPROVED') {
-            // Cek irisan tanggal
             const overlapDate = (tglMulai <= rSelesai && tglSelesai >= r.tanggal_pinjam);
-            // Cek irisan jam
             const overlapTime = (jamMulai < r.jam_selesai && jamSelesai > r.jam_mulai);
             return overlapDate && overlapTime;
         }
@@ -296,7 +332,7 @@ function toggleAdminModal() {
         switchView('admin');
     } else {
         const modal = document.getElementById('adminAuthModal');
-        modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+        if (modal) modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
     }
 }
 
@@ -347,7 +383,6 @@ function renderAdminTable() {
             ? ` s.d ${item.tanggal_selesai}` 
             : '';
 
-        // Deteksi bentrok antar permohonan
         const isConflict = localReservations.some(other => {
             if (other.id !== item.id && other.room_id === item.room_id && other.status !== 'REJECTED') {
                 const itemSelesai = item.tanggal_selesai || item.tanggal_pinjam;
@@ -423,7 +458,7 @@ async function updateStatus(id, newStatus) {
     }
 }
 
-// Notifikasi Modal Modern (Pengganti alert() bawaan browser)
+// Modal Alert Kustom
 function showCustomAlert(message, title = "Informasi Sistem", type = "info") {
     const modal = document.getElementById('customAlertModal');
     const titleEl = document.getElementById('alertTitle');
@@ -433,18 +468,18 @@ function showCustomAlert(message, title = "Informasi Sistem", type = "info") {
 
     if (!modal) return;
 
-    titleEl.innerText = title;
-    msgEl.innerText = message;
+    if (titleEl) titleEl.innerText = title;
+    if (msgEl) msgEl.innerText = message;
 
     if (type === "success") {
-        iconEl.innerText = "✅";
-        headerBg.style.background = "#14532d";
+        if (iconEl) iconEl.innerText = "✅";
+        if (headerBg) headerBg.style.background = "#14532d";
     } else if (type === "error") {
-        iconEl.innerText = "⚠️";
-        headerBg.style.background = "#7f1d1d";
+        if (iconEl) iconEl.innerText = "⚠️";
+        if (headerBg) headerBg.style.background = "#7f1d1d";
     } else {
-        iconEl.innerText = "ℹ️";
-        headerBg.style.background = "#0f172a";
+        if (iconEl) iconEl.innerText = "ℹ️";
+        if (headerBg) headerBg.style.background = "#0f172a";
     }
 
     modal.style.display = 'flex';
@@ -454,9 +489,7 @@ function closeCustomAlert() {
     const modal = document.getElementById('customAlertModal');
     if (modal) modal.style.display = 'none';
 }
-// =========================================================
-// HAPUS AJUAN (Fitur Admin)
-// =========================================================
+
 async function deleteReservation(id) {
     if (!confirm("Apakah Anda yakin ingin menghapus permohonan ini secara permanen?")) return;
 

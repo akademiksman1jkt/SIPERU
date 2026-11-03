@@ -335,6 +335,14 @@ body {
 /* =========================================================
    PERBAIKAN TOTAL TAMPILAN MOBILE & SIDEBAR NAV (RESPONSIVE)
    ========================================================= */
+.table-responsive-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* Scroll halus di iOS Safari */
+    margin-top: 10px;
+    border: 1px solid var(--brand-border-light);
+    border-radius: 4px;
+}
 @media (max-width: 768px) {
     /* 1. Header Atas Sekolah */
     .school-header {

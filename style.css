@@ -4,11 +4,10 @@
     --brand-dark: #0f172a;
     --brand-border: #94a3b8;
     --brand-border-light: #cbd5e1;
-    --accent-blue: #1e3a8a;
-    --accent-amber: #b45309;
-    --bg-main: #e2e8f0;
+    --accent-blue: #2563eb;
+    --accent-amber: #d97706;
+    --bg-main: #f1f5f9;
     --bg-card: #ffffff;
-    --bg-calendar-cell: #ffffff;
     --text-main: #0f172a;
     --text-muted: #475569;
 }
@@ -30,7 +29,9 @@ body {
     line-height: 1.6;
 }
 
-/* Header Utama Sekolah */
+/* =========================================================
+   HEADER UTAMA SEKOLAH
+   ========================================================= */
 .school-header {
     background-color: var(--brand-dark);
     color: #ffffff;
@@ -50,12 +51,12 @@ body {
 
 .school-logo-badge {
     background: #ffffff;
-    width: 52px;
-    height: 52px;
+    width: 50px;
+    height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 6px;
+    border-radius: 8px;
     padding: 4px;
     border: 1px solid var(--brand-border-light);
     flex-shrink: 0;
@@ -87,7 +88,7 @@ body {
     padding: 10px 20px;
     font-size: 14px;
     font-weight: 700;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
     transition: all 0.2s ease;
 }
@@ -104,7 +105,7 @@ body {
     padding: 8px 18px;
     font-size: 13px;
     font-weight: 700;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
 }
 
@@ -117,7 +118,9 @@ body {
     flex: 1;
 }
 
-/* Sidebar Navigasi */
+/* =========================================================
+   SIDEBAR NAVIGASI
+   ========================================================= */
 .sidebar-nav {
     width: 260px;
     background: #ffffff;
@@ -170,88 +173,33 @@ body {
 }
 
 .nav-menu-item.active {
-    background-color: #e2e8f0;
-    color: var(--brand-dark);
-    border-left-color: var(--brand-dark);
+    background-color: #e0e7ff;
+    color: #1e40af;
+    border-left-color: #2563eb;
     font-weight: 800;
 }
 
 .content-area {
     flex: 1;
-    padding: 32px;
+    padding: 28px;
     overflow-x: hidden;
 }
 
 .official-card {
     background: #ffffff;
-    border: 2px solid var(--brand-border-light);
-    border-radius: 8px;
+    border: 2px solid #cbd5e1;
+    border-radius: 12px;
     margin-bottom: 24px;
     overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
-/* Katalog Ruangan */
-.room-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 24px;
-}
-
-.room-card {
-    background: #ffffff;
-    border: 2px solid var(--brand-border-light);
-    border-radius: 6px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-}
-
-.room-card-header {
-    background: #f8fafc;
-    color: var(--brand-dark);
-    padding: 16px 20px;
-    font-weight: 800;
-    font-size: 16px;
-    border-bottom: 2px solid var(--brand-border-light);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.room-badge {
-    background: #e2e8f0;
-    color: #1e293b;
-    font-size: 12px;
-    font-weight: 700;
-    padding: 4px 10px;
-    border-radius: 4px;
-    border: 1px solid var(--brand-border-light);
-}
-
-.room-body {
-    padding: 20px;
-    font-size: 14px;
-    color: var(--text-muted);
-    flex: 1;
-    line-height: 1.7;
-}
-
-.room-body strong {
-    color: var(--brand-dark);
-}
-
-.room-card-footer {
-    padding: 16px 20px;
-    background: #ffffff;
-    border-top: 1px solid var(--brand-border-light);
-}
-
-/* Form Controls */
+/* Form & Controls */
 .form-control {
     width: 100%;
     padding: 12px 14px;
     border: 2px solid var(--brand-border-light);
-    border-radius: 4px;
+    border-radius: 6px;
     font-size: 14px;
     font-family: inherit;
     color: var(--text-main);
@@ -260,7 +208,7 @@ body {
 
 .form-control:focus {
     outline: none;
-    border-color: var(--brand-dark);
+    border-color: var(--accent-blue);
 }
 
 .form-grid-flex {
@@ -268,24 +216,23 @@ body {
     gap: 20px;
 }
 
-/* Scroll Wrapper Tabel Admin */
 .table-responsive-wrapper {
     width: 100%;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     margin-top: 10px;
     border: 1px solid var(--brand-border-light);
-    border-radius: 4px;
+    border-radius: 6px;
 }
 
 /* =========================================================
-   DESAIN KALENDER MODERN (STYLE APPLE / SAMSUNG ONE UI)
+   DESAIN KALENDER MODERN & BERWARNA (CLEAR BORDERS)
    ========================================================= */
 
 .card-header-bar {
-    padding: 20px 24px;
-    background: #ffffff;
-    border-bottom: 1px solid #e2e8f0;
+    padding: 18px 24px;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    color: #ffffff;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -293,95 +240,92 @@ body {
 }
 
 .calendar-month-title {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 800;
-    color: #0f172a;
+    color: #ffffff;
     letter-spacing: -0.5px;
 }
 
 .calendar-nav-group {
     display: flex;
     align-items: center;
-    gap: 8px;
-    background: #f1f5f9;
-    padding: 4px 6px;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 4px 8px;
     border-radius: 30px;
-    border: 1px solid #e2e8f0;
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .btn-cal-nav {
     background: #ffffff;
     color: #0f172a;
-    border: 1px solid #cbd5e1;
-    width: 32px;
-    height: 32px;
+    border: none;
+    width: 34px;
+    height: 34px;
     border-radius: 50%;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: bold;
     cursor: pointer;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
     transition: all 0.2s ease;
 }
 
 .btn-cal-nav:hover {
-    background: #0f172a;
+    background: #38bdf8;
     color: #ffffff;
-    border-color: #0f172a;
+    transform: scale(1.08);
 }
 
 .calendar-responsive-wrapper {
     width: 100%;
     overflow-x: auto;
-    background: #ffffff;
+    background: #cbd5e1; /* Warna batas antar sel kalender */
+    padding: 2px;
 }
 
 .table-calendar {
     width: 100%;
     min-width: 700px;
-    border-collapse: separate;
-    border-spacing: 0;
-    background: #ffffff;
+    border-collapse: collapse;
+    background: #cbd5e1; /* Warna grid border */
 }
 
+/* Header Hari */
 .table-calendar th {
-    background: #ffffff;
-    color: #64748b;
-    padding: 14px 8px;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.8px;
+    background: #1e293b;
+    color: #94a3b8;
+    padding: 12px 8px;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 1px;
     text-align: center;
-    border-bottom: 1px solid #e2e8f0;
+    border: 1px solid #334155;
     text-transform: uppercase;
 }
 
-.table-calendar th.sun { color: #ef4444; }
-.table-calendar th.sat { color: #f59e0b; }
+.table-calendar th.sun { color: #f87171; }
+.table-calendar th.sat { color: #fbbf24; }
 
+/* Sel Tanggal Bergaris Jelas */
 .table-calendar td {
-    border-bottom: 1px solid #f1f5f9;
-    border-right: 1px solid #f1f5f9;
     background-color: #ffffff;
-    height: 105px;
+    border: 1.5px solid #cbd5e1; /* GARIS BATAS JELAS */
+    height: 110px;
     vertical-align: top;
     padding: 8px;
     width: 14.28%;
-    transition: background-color 0.15s ease;
-}
-
-.table-calendar tr td:last-child {
-    border-right: none;
+    transition: all 0.15s ease;
 }
 
 .table-calendar td:hover {
-    background-color: #f8fafc;
+    background-color: #eff6ff; /* Sorotan warna biru muda saat hover */
 }
 
 .table-calendar td.empty-cell {
-    background-color: #fafafa;
+    background-color: #f8fafc;
 }
 
 .date-header {
@@ -393,7 +337,7 @@ body {
 
 .date-num {
     font-size: 14px;
-    font-weight: 700;
+    font-weight: 800;
     color: #334155;
     width: 28px;
     height: 28px;
@@ -403,43 +347,43 @@ body {
     border-radius: 50%;
 }
 
-/* Tanggal Hari Ini (Badge Bulat iOS/Samsung) */
+/* Indikator Hari Ini Biru Menyala */
 .today-badge .date-num {
     background: #2563eb;
     color: #ffffff !important;
     font-weight: 800;
-    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.35);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.45);
 }
 
-/* Event Tag Modern */
+/* Tag Kegiatan Berwarna Segar */
 .event-tag-modern {
-    background: #f0fdf4;
-    color: #166534;
-    border: 1px solid #bbf7d0;
+    background: #dcfce7;
+    color: #14532d;
+    border: 1px solid #86efac;
     padding: 4px 8px;
     font-size: 11px;
     font-weight: 700;
-    border-radius: 12px;
+    border-radius: 8px;
     margin-top: 4px;
     display: flex;
     align-items: center;
-    gap: 5px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    gap: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
 .event-dot {
-    width: 6px;
-    height: 6px;
+    width: 7px;
+    height: 7px;
     border-radius: 50%;
-    background-color: #22c55e;
+    background-color: #16a34a;
     flex-shrink: 0;
 }
 
 /* =========================================================
-   PERBAIKAN TAMPILAN MOBILE & SIDEBAR NAV (RESPONSIVE FIX)
+   RESPONSIVE FIX FOR MOBILE & TABLET
    ========================================================= */
 @media (max-width: 768px) {
     .school-header {
@@ -528,10 +472,10 @@ body {
     }
 
     .nav-menu-item.active {
-        background-color: #f1f5f9;
-        color: var(--brand-dark);
+        background-color: #e0e7ff;
+        color: #1e40af;
         border-left-color: transparent;
-        border-bottom-color: var(--brand-dark);
+        border-bottom-color: #2563eb;
     }
 
     .content-area {
@@ -551,6 +495,6 @@ body {
     }
 
     .calendar-month-title {
-        font-size: 16px;
+        font-size: 17px;
     }
 }

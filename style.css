@@ -556,3 +556,38 @@ body {
         height: 5px;
     }
 }
+/* =========================================================
+   WARNA-WARNI UNIK UNTUK 7 RUANGAN SMKN 26 JAKARTA
+   ========================================================= */
+
+/* ID 1: Aula (Hijau Emerald) */
+.room-color-1 { background-color: #dcfce7; color: #14532d; border: 1px solid #86efac; }
+.room-color-1 .event-dot { background-color: #16a34a; }
+
+/* ID 2: Lab Sija (Biru Laut) */
+.room-color-2 { background-color: #e0f2fe; color: #0369a1; border: 1px solid #7dd3fc; }
+.room-color-2 .event-dot { background-color: #0284c7; }
+
+/* ID 3: Lab KGS (Kuning Amber) */
+.room-color-3 { background-color: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+.room-color-3 .event-dot { background-color: #d97706; }
+
+/* ID 4: Lab TEK (Merah Muda / Rose) */
+.room-color-4 { background-color: #ffe4e6; color: #9f1239; border: 1px solid #fecdd3; }
+.room-color-4 .event-dot { background-color: #e11d48; }
+
+/* ID 5: Lab TFLM (Ungu) */
+.room-color-5 { background-color: #f3e8ff; color: #6b21a8; border: 1px solid #e9d5ff; }
+.room-color-5 .event-dot { background-color: #9333ea; }
+
+/* ID 6: Ruang Sidang (Oranye / Coral) */
+.room-color-6 { background-color: #ffedd5; color: #9a3412; border: 1px solid #fed7aa; }
+.room-color-6 .event-dot { background-color: #ea580c; }
+
+/* ID 7: Ruang Multimedia (Cyan / Toska) */
+.room-color-7 { background-color: #ccfbf1; color: #115e59; border: 1px solid #99f6e4; }
+.room-color-7 .event-dot { background-color: #0d9488; }
+
+/* Default / Fallback */
+.event-tag-default { background-color: #e2e8f0; color: #334155; border: 1px solid #cbd5e1; }
+.event-tag-default .event-dot { background-color: #64748b; }

@@ -286,6 +286,7 @@ async function handleFormSubmit(e) {
         nama_peminjam: document.getElementById('formNama').value,
         identitas: document.getElementById('formIdentitas').value,
         unit_organisasi: document.getElementById('formOrganisasi').value,
+        jumlah_peserta: parseInt(document.getElementById('formJumlahPeserta').value) || 0, // <--- Menambahkan Jumlah Peserta
         tanggal_pinjam: tglMulai,
         tanggal_selesai: tglSelesai,
         jam_mulai: jamMulai,
@@ -411,7 +412,8 @@ function renderAdminTable() {
                 </td>
                 <td style="padding: 12px;">
                     <strong>${item.nama_peminjam}</strong><br>
-                    <small style="color:#64748b;">${item.unit_organisasi} (${item.identitas})</small>
+                    <small style="color:#64748b;">${item.unit_organisasi} (${item.identitas})</small><br>
+                    <small style="color:#2563eb; font-weight: 700;">👥 ${item.jumlah_peserta || 0} Peserta</small>
                 </td>
                 <td style="padding: 12px;">
                     <strong style="color: #0f172a;">${item.rooms?.nama_ruangan || '-'}</strong>

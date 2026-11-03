@@ -143,7 +143,6 @@ function renderCalendar() {
                     </div>
                 `).join('');
 
-                // Menambahkan onclick untuk membuka Pop-up Detail
                 rowHtml += `
                     <td onclick="openEventModal('${dateStr}')" style="${bgStyle} cursor: pointer;">
                         <div class="date-num" style="${isToday ? 'color: #b45309; font-size:15px;' : ''}">
@@ -173,7 +172,6 @@ function openEventModal(dateStr) {
     document.getElementById('modalDateTitle').innerText = `Agenda Tanggal: ${dateStr}`;
     const listContainer = document.getElementById('modalEventList');
     
-    // Cari permohonan disetujui pada tanggal tersebut
     const dayEvents = localReservations.filter(r => r.tanggal_pinjam === dateStr && r.status === 'APPROVED');
 
     if (dayEvents.length === 0) {
@@ -210,9 +208,6 @@ function closeEventModal() {
     document.getElementById('eventDetailModal').style.display = 'none';
 }
 
-// SEBELUMNYA: alert("Permohonan peminjaman berhasil dikirim! ...");
-// DIGANTI MENJADI:
-
 async function handleFormSubmit(e) {
     e.preventDefault();
     const payload = {
@@ -231,7 +226,6 @@ async function handleFormSubmit(e) {
         const { error } = await supabaseClient.from('reservations').insert([payload]);
         if (error) throw error;
         
-        // Pengganti alert() bawaan
         showCustomAlert("Permohonan peminjaman berhasil dikirim! Menunggu persetujuan Admin Sarpras.", "Pengajuan Berhasil", "success");
         
         document.getElementById('bookingForm').reset();
@@ -251,19 +245,12 @@ function toggleAdminModal() {
     }
 }
 
-// SEBELUMNYA: alert("Username atau Password Admin salah!");
-// DIGANTI MENJADI:
-
-// =========================================================
-// LOG IN ADMIN FLEKSIBEL (Cek ke Tabel Database Supabase)
-// =========================================================
 async function handleAdminLogin(e) {
     e.preventDefault();
     const inputUser = document.getElementById('adminUser').value.trim();
     const inputPass = document.getElementById('adminPass').value.trim();
 
     try {
-        // Cari data admin di tabel admin_users berdasarkan username & password
         const { data, error } = await supabaseClient
             .from('admin_users')
             .select('*')
@@ -276,7 +263,6 @@ async function handleAdminLogin(e) {
             return;
         }
 
-        // Jika data ditemukan & cocok
         isAdminLoggedIn = true;
         document.getElementById('adminAuthModal').style.display = 'none';
         
@@ -315,7 +301,6 @@ function renderAdminTable() {
     `).join('');
 }
 
-
 async function updateStatus(id, newStatus) {
     try {
         const { error } = await supabaseClient.from('reservations').update({ status: newStatus }).eq('id', id);
@@ -326,9 +311,8 @@ async function updateStatus(id, newStatus) {
         showCustomAlert("Gagal memperbarui status: " + err.message, "Kesalahan Sistem", "error");
     }
 }
-// =========================================================
-// NOTIFIKASI MODAL MODERN (Pengganti alert() bawaan browser)
-// =========================================================
+
+// Notifikasi Modal Modern (Pengganti alert() bawaan browser)
 function showCustomAlert(message, title = "Informasi Sistem", type = "info") {
     const modal = document.getElementById('customAlertModal');
     const titleEl = document.getElementById('alertTitle');

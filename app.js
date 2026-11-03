@@ -114,17 +114,55 @@ function renderRoomsCatalog() {
     `).join('');
 }
 
+// 1. Mengisi Dropdown Kategori Utama
 function populateRoomSelectOptions() {
-    const select = document.getElementById('formRoomId');
-    if (!select) return;
-    select.innerHTML = '<option value="">-- Pilih Ruangan --</option>' + 
-        localRooms.map(r => `<option value="${r.id}">${r.nama_ruangan}</option>`).join('');
+    const selectKategori = document.getElementById('formKategoriFilter');
+    if (!selectKategori) return;
+
+    // Ambil daftar kategori unik dari data rooms (misal: Ruang Kelas, Laboratorium, Aula, dll.)
+    const categories = [...new Set(localRooms.map(r => r.kategori || 'Fasilitas Umum'))];
+
+    selectKategori.innerHTML = '<option value="">-- Pilih Kategori --</option>' + 
+        categories.map(kat => `<option value="${kat}">${kat}</option>`).join('');
 }
 
+// 2. Mengisi Dropdown Detail Ruangan Berdasarkan Kategori yang Dipilih
+function handleKategoriChange() {
+    const selectedKat = document.getElementById('formKategoriFilter').value;
+    const selectRoom = document.getElementById('formRoomId');
+
+    if (!selectedKat) {
+        selectRoom.innerHTML = '<option value="">-- Pilih Kategori Terlebih Dahulu --</option>';
+        selectRoom.disabled = true;
+        return;
+    }
+
+    // Filter ruangan yang sesuai dengan kategori terpilih (misal: "Ruang Kelas")
+    const filteredRooms = localRooms.filter(r => r.kategori === selectedKat);
+
+    if (filteredRooms.length === 0) {
+        selectRoom.innerHTML = '<option value="">Tidak ada ruangan pada kategori ini</option>';
+        selectRoom.disabled = true;
+    } else {
+        selectRoom.innerHTML = '<option value="">-- Pilih Ruangan --</option>' + 
+            filteredRooms.map(r => `<option value="${r.id}">${r.nama_ruangan}</option>`).join('');
+        selectRoom.disabled = false;
+    }
+}
+
+// 3. Penyesuaian Fungsi Pemasukan dari Katalog Kartu
 function selectRoomForBooking(id) {
     switchView('pinjam');
-    const selectEl = document.getElementById('formRoomId');
-    if (selectEl) selectEl.value = id;
+    const room = localRooms.find(r => r.id === id);
+    if (room) {
+        const selectKategori = document.getElementById('formKategoriFilter');
+        if (selectKategori) {
+            selectKategori.value = room.kategori;
+            handleKategoriChange(); // Trigger update dropdown kedua
+        }
+        const selectRoom = document.getElementById('formRoomId');
+        if (selectRoom) selectRoom.value = id;
+    }
 }
 
 // =========================================================

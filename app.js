@@ -333,9 +333,14 @@ async function handleFormSubmit(e) {
             curr.setDate(curr.getDate() + 7);
         }
     } else {
-        datesToBook.push(tglMulai);
+        let curr = new Date(start);
+        while (curr <= end) {
+            datesToBook.push(curr.toISOString().split('T')[0]);
+            curr.setDate(curr.getDate() + 1);
+        }
     }
 
+    // Payload hanya berisi kolom yang benar-benar ada di tabel Supabase
     const basePayload = {
         room_id: roomId,
         nama_peminjam: document.getElementById('formNama').value,
@@ -345,14 +350,16 @@ async function handleFormSubmit(e) {
         jam_mulai: jamMulai,
         jam_selesai: jamSelesai,
         tujuan_kegiatan: document.getElementById('formTujuan').value + (isRutin ? ' [Rutin Mingguan]' : ''),
-        status: 'PENDING',
-        is_rutin: isRutin
+        status: 'PENDING'
     };
 
-    const payloads = isRutin 
-        ? datesToBook.map(d => ({ ...basePayload, tanggal_pinjam: d, tanggal_selesai: d }))
-        : [{ ...basePayload, tanggal_pinjam: tglMulai, tanggal_selesai: tglSelesai }];
+    const payloads = datesToBook.map(d => ({
+        ...basePayload,
+        tanggal_pinjam: d,
+        tanggal_selesai: d
+    }));
 
+    // Cek bentrok tanggal & jam dengan agenda disetujui (APPROVED)
     const isConflict = localReservations.some(r => {
         if (r.room_id === roomId && r.status === 'APPROVED') {
             return payloads.some(p => {
@@ -375,7 +382,7 @@ async function handleFormSubmit(e) {
 
         if (isConflict) {
             showCustomAlert(
-                `Permohonan ${payloads.length} sesi berhasil dikirim (Status: PENDING). Catatan: Terdapat jadwal yang bentrok dengan peminjaman lain. Keputusan persetujuan ada di tangan Admin Sarpras.`, 
+                `Permohonan ${payloads.length} sesi berhasil dikirim (Status: PENDING). Catatan: Terdapat jadwal yang bentrok dengan permohonan lain. Keputusan persetujuan ada di tangan Admin Sarpras.`, 
                 "Peringatan Bentrok", 
                 "info"
             );

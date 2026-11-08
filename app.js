@@ -77,10 +77,9 @@ async function fetchReservations() {
 }
 
 // =========================================================
-// RENDER KATALOG RUANGAN (Mendukung ID 'roomGridContainer')
+// RENDER KATALOG RUANGAN
 // =========================================================
 function renderRoomsCatalog() {
-    // Mendukung ID baru 'roomGridContainer' maupun fallback 'roomsCatalogGrid'
     const container = document.getElementById('roomGridContainer') || document.getElementById('roomsCatalogGrid');
     if (!container) return;
 
@@ -114,19 +113,19 @@ function renderRoomsCatalog() {
     `).join('');
 }
 
-// 1. Mengisi Dropdown Kategori Utama
+// =========================================================
+// DROPDOWN BERTINGKAT (CASCADING SELECTION)
+// =========================================================
 function populateRoomSelectOptions() {
     const selectKategori = document.getElementById('formKategoriFilter');
     if (!selectKategori) return;
 
-    // Ambil daftar kategori unik dari data rooms (misal: Ruang Kelas, Laboratorium, Aula, dll.)
     const categories = [...new Set(localRooms.map(r => r.kategori || 'Fasilitas Umum'))];
 
     selectKategori.innerHTML = '<option value="">-- Pilih Kategori --</option>' + 
         categories.map(kat => `<option value="${kat}">${kat}</option>`).join('');
 }
 
-// 2. Mengisi Dropdown Detail Ruangan Berdasarkan Kategori yang Dipilih
 function handleKategoriChange() {
     const selectedKat = document.getElementById('formKategoriFilter').value;
     const selectRoom = document.getElementById('formRoomId');
@@ -137,7 +136,6 @@ function handleKategoriChange() {
         return;
     }
 
-    // Filter ruangan yang sesuai dengan kategori terpilih (misal: "Ruang Kelas")
     const filteredRooms = localRooms.filter(r => r.kategori === selectedKat);
 
     if (filteredRooms.length === 0) {
@@ -150,7 +148,6 @@ function handleKategoriChange() {
     }
 }
 
-// 3. Penyesuaian Fungsi Pemasukan dari Katalog Kartu
 function selectRoomForBooking(id) {
     switchView('pinjam');
     const room = localRooms.find(r => r.id === id);
@@ -158,7 +155,7 @@ function selectRoomForBooking(id) {
         const selectKategori = document.getElementById('formKategoriFilter');
         if (selectKategori) {
             selectKategori.value = room.kategori;
-            handleKategoriChange(); // Trigger update dropdown kedua
+            handleKategoriChange();
         }
         const selectRoom = document.getElementById('formRoomId');
         if (selectRoom) selectRoom.value = id;
@@ -166,7 +163,7 @@ function selectRoomForBooking(id) {
 }
 
 // =========================================================
-// RENDER KALENDER (WARNA KONTRASTIF 1 S.D 7 PER RUANGAN)
+// RENDER KALENDER (WARNA UNIK RUANGAN)
 // =========================================================
 function renderCalendar() {
     const tbody = document.getElementById('calendarGridBody');
@@ -198,7 +195,6 @@ function renderCalendar() {
                 hasDaysInRow = true;
                 const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(dayCounter).padStart(2, '0')}`;
 
-                // Filter permohonan APPROVED yang mencakup tanggal ini (Multi-day support)
                 const approvedEvents = localReservations.filter(r => {
                     const tglMulai = r.tanggal_pinjam;
                     const tglSelesai = r.tanggal_selesai || r.tanggal_pinjam;
@@ -247,7 +243,7 @@ function changeMonth(delta) {
 }
 
 // =========================================================
-// POP-UP DETAIL AGENDA TANGGAL (DENGAN DUKUNGAN MULTI-DAY)
+// POP-UP DETAIL AGENDA TANGGAL (NAMA KEGIATAN, PEMINJAM, PESERTA, JAM)
 // =========================================================
 function openEventModal(dateStr) {
     const titleEl = document.getElementById('modalDateTitle');
@@ -256,7 +252,6 @@ function openEventModal(dateStr) {
     const listContainer = document.getElementById('modalEventList');
     if (!listContainer) return;
     
-    // Filter agenda yang mencakup tanggal ini
     const dayEvents = localReservations.filter(r => {
         const tglMulai = r.tanggal_pinjam;
         const tglSelesai = r.tanggal_selesai || r.tanggal_pinjam;
@@ -272,19 +267,26 @@ function openEventModal(dateStr) {
         `;
     } else {
         listContainer.innerHTML = dayEvents.map(e => `
-            <div style="background: #f8fafc; border: 2px solid #cbd5e1; border-radius: 6px; padding: 14px; margin-bottom: 12px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                    <strong style="color: #0f172a; font-size: 15px;">${e.rooms?.nama_ruangan || 'Ruangan'}</strong>
-                    <span style="background: #dcfce7; color: #14532d; border: 1px solid #86efac; padding: 2px 8px; font-weight: 800; font-size: 12px; border-radius: 4px;">
-                        ${e.jam_mulai.substring(0,5)} - ${e.jam_selesai.substring(0,5)} WIB
+            <div style="background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 14px; margin-bottom: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.04);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <strong style="color: #0f172a; font-size: 15px; font-weight: 800;">
+                        ${e.rooms?.nama_ruangan || 'Ruangan'}
+                    </strong>
+                    <span style="background: #dcfce7; color: #14532d; border: 1px solid #86efac; padding: 3px 10px; font-weight: 800; font-size: 12px; border-radius: 20px;">
+                        ⏰ ${e.jam_mulai.substring(0,5)} - ${e.jam_selesai.substring(0,5)} WIB
                     </span>
                 </div>
-                <div style="font-size: 14px; font-weight: 700; color: #1e293b; margin-bottom: 6px;">
-                    Agenda: ${e.tujuan_kegiatan}
-                </div>
-                <div style="font-size: 13px; color: #64748b; border-top: 1px solid #e2e8f0; padding-top: 6px; margin-top: 6px;">
-                    <strong>Peminjam:</strong> ${e.nama_peminjam} (${e.unit_organisasi})<br>
-                    <strong>No. Identitas:</strong> ${e.identitas}
+                
+                <div style="font-size: 13.5px; color: #334155; line-height: 1.6; border-top: 1px solid #f1f5f9; padding-top: 8px;">
+                    <div style="margin-bottom: 4px;">
+                        <strong>📌 Nama Kegiatan:</strong> ${e.tujuan_kegiatan}
+                    </div>
+                    <div style="margin-bottom: 4px;">
+                        <strong>👤 Peminjam:</strong> ${e.nama_peminjam} (${e.unit_organisasi})
+                    </div>
+                    <div>
+                        <strong>👥 Jumlah Peserta:</strong> ${e.jumlah_peserta || 0} Orang
+                    </div>
                 </div>
             </div>
         `).join('');
@@ -300,7 +302,7 @@ function closeEventModal() {
 }
 
 // =========================================================
-// SUBMIT FORM PEMINJAMAN
+// SUBMIT FORM PEMINJAMAN (MENDUKUNG RUTIN MINGGUAN)
 // =========================================================
 async function handleFormSubmit(e) {
     e.preventDefault();
@@ -313,39 +315,58 @@ async function handleFormSubmit(e) {
     const tglSelesai = tglSelesaiInput && tglSelesaiInput.value ? tglSelesaiInput.value : tglMulai;
     const jamMulai = document.getElementById('formJamMulai').value;
     const jamSelesai = document.getElementById('formJamSelesai').value;
+    const isRutin = document.getElementById('formIsRutin')?.checked || false;
 
     if (tglSelesai < tglMulai) {
         showCustomAlert("Tanggal selesai tidak boleh lebih awal dari tanggal mulai!", "Input Tidak Valid", "error");
         return;
     }
 
-    const payload = {
+    let datesToBook = [];
+    let start = new Date(tglMulai);
+    let end = new Date(tglSelesai);
+
+    if (isRutin) {
+        let curr = new Date(start);
+        while (curr <= end) {
+            datesToBook.push(curr.toISOString().split('T')[0]);
+            curr.setDate(curr.getDate() + 7);
+        }
+    } else {
+        datesToBook.push(tglMulai);
+    }
+
+    const basePayload = {
         room_id: roomId,
         nama_peminjam: document.getElementById('formNama').value,
         identitas: document.getElementById('formIdentitas').value,
         unit_organisasi: document.getElementById('formOrganisasi').value,
-        jumlah_peserta: parseInt(document.getElementById('formJumlahPeserta').value) || 0, // <--- Menambahkan Jumlah Peserta
-        tanggal_pinjam: tglMulai,
-        tanggal_selesai: tglSelesai,
+        jumlah_peserta: parseInt(document.getElementById('formJumlahPeserta').value) || 0,
         jam_mulai: jamMulai,
         jam_selesai: jamSelesai,
-        tujuan_kegiatan: document.getElementById('formTujuan').value,
-        status: 'PENDING'
+        tujuan_kegiatan: document.getElementById('formTujuan').value + (isRutin ? ' [Rutin Mingguan]' : ''),
+        status: 'PENDING',
+        is_rutin: isRutin
     };
 
-    // Deteksi bentrok tanggal & jam dengan agenda disetujui (APPROVED)
+    const payloads = isRutin 
+        ? datesToBook.map(d => ({ ...basePayload, tanggal_pinjam: d, tanggal_selesai: d }))
+        : [{ ...basePayload, tanggal_pinjam: tglMulai, tanggal_selesai: tglSelesai }];
+
     const isConflict = localReservations.some(r => {
-        const rSelesai = r.tanggal_selesai || r.tanggal_pinjam;
         if (r.room_id === roomId && r.status === 'APPROVED') {
-            const overlapDate = (tglMulai <= rSelesai && tglSelesai >= r.tanggal_pinjam);
-            const overlapTime = (jamMulai < r.jam_selesai && jamSelesai > r.jam_mulai);
-            return overlapDate && overlapTime;
+            return payloads.some(p => {
+                const rSelesai = r.tanggal_selesai || r.tanggal_pinjam;
+                const overlapDate = (p.tanggal_pinjam <= rSelesai && p.tanggal_selesai >= r.tanggal_pinjam);
+                const overlapTime = (jamMulai < r.jam_selesai && jamSelesai > r.jam_mulai);
+                return overlapDate && overlapTime;
+            });
         }
         return false;
     });
 
     try {
-        const { error } = await supabaseClient.from('reservations').insert([payload]);
+        const { error } = await supabaseClient.from('reservations').insert(payloads);
         if (error) throw error;
         
         document.getElementById('bookingForm').reset();
@@ -354,12 +375,12 @@ async function handleFormSubmit(e) {
 
         if (isConflict) {
             showCustomAlert(
-                "Permohonan berhasil dikirim (Status: PENDING). Catatan: Ruangan & rentang waktu ini memiliki jadwal yang bentrok dengan permohonan lain. Keputusan persetujuan penuh ada di tangan Admin Sarpras.", 
+                `Permohonan ${payloads.length} sesi berhasil dikirim (Status: PENDING). Catatan: Terdapat jadwal yang bentrok dengan peminjaman lain. Keputusan persetujuan ada di tangan Admin Sarpras.`, 
                 "Peringatan Bentrok", 
                 "info"
             );
         } else {
-            showCustomAlert("Permohonan peminjaman berhasil dikirim! Menunggu persetujuan Admin Sarpras.", "Pengajuan Berhasil", "success");
+            showCustomAlert(`Permohonan ${payloads.length} sesi peminjaman berhasil dikirim! Menunggu persetujuan Admin.`, "Pengajuan Berhasil", "success");
         }
     } catch (err) {
         showCustomAlert("Gagal mengirim permohonan: " + err.message, "Kesalahan Sistem", "error");
@@ -411,7 +432,7 @@ function logoutAdmin() {
 }
 
 // =========================================================
-// RENDER TABEL ADMIN (Dengan Deteksi Bentrok Visual)
+// RENDER TABEL ADMIN
 // =========================================================
 function renderAdminTable() {
     const tbody = document.getElementById('adminTableBody');
@@ -498,7 +519,6 @@ async function updateStatus(id, newStatus) {
     }
 }
 
-// Modal Alert Kustom
 function showCustomAlert(message, title = "Informasi Sistem", type = "info") {
     const modal = document.getElementById('customAlertModal');
     const titleEl = document.getElementById('alertTitle');

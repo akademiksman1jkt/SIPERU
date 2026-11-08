@@ -54,7 +54,28 @@ async function fetchRooms() {
     try {
         const { data, error } = await supabaseClient.from('rooms').select('*');
         if (error) throw error;
-        localRooms = data || [];
+        
+        // Mengurutkan dengan prioritas utama: Aula di paling atas, lalu berdasarkan kategori & nama
+        localRooms = (data || []).sort((a, b) => {
+            const namaA = (a.nama_ruangan || '').toLowerCase();
+            const namaB = (b.nama_ruangan || '').toLowerCase();
+            
+            // Prioritas mutlak: Aula paling atas
+            if (namaA.includes('aula') && !namaB.includes('aula')) return -1;
+            if (!namaA.includes('aula') && namaB.includes('aula')) return 1;
+
+            // Urutkan berdasarkan kategori
+            const katA = (a.kategori || '').toLowerCase();
+            const katB = (b.kategori || '').toLowerCase();
+            
+            if (katA !== katB) {
+                return katA.localeCompare(katB, 'id');
+            }
+            
+            // Jika kategori sama, urutkan berdasarkan nama ruangan secara numerik (Ruang 1, Ruang 2, dst.)
+            return (a.nama_ruangan || '').localeCompare(b.nama_ruangan || '', 'id', { numeric: true });
+        });
+        
         renderRoomsCatalog();
         populateRoomSelectOptions();
     } catch (err) {
